@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Panel del motor — Viel Propiedades · demo</title>
+<link rel="icon" href="./assets/cropped-viel.cl-png-1-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Panel del motor de la demo Viel — la maquinaria que se ve al lado del
+   WhatsApp: reloj (real o simulado), cola de seguimientos con el tiempo
+   comprimido DECLARADO en pantalla, ficha del lead y métricas.
+   Autocontenido: HTML + CSS + JS vanilla, sin frameworks ni CDNs de script.
+   ========================================================================== */
+:root{
+  --marca:#002c6e; --marca-2:#00214f; --acento:#dbb84a;
+  --tinta:#111111; --gris:#4a4a4a; --gris-cl:#7a7a7a;
+  --linea:#e2e2e4; --papel:#ffffff; --hueso:#f3f3f4;
+  --ok:#0a7d63; --ok-bg:rgba(0,168,132,.12);
+  --esp:#7a5c05; --esp-bg:rgba(219,184,74,.22);
+  --off:#6b6b70; --off-bg:#ececed;
+  --sans:'Inter','Helvetica Neue',Helvetica,Arial,system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--hueso);color:var(--tinta);font-family:var(--sans);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  min-height:100dvh;display:flex;flex-direction:column}
+img{max-width:100%;height:auto;display:block}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none !important}
+a{color:var(--marca)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+
+.aviso{background:var(--tinta);color:rgba(255,255,255,.8);padding:7px 16px;
+  font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-align:center}
+.aviso b{color:#fff}
+
+.top{background:var(--papel);border-bottom:1px solid var(--linea);position:sticky;top:0;z-index:5}
+.top-in{max-width:1400px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:10px;min-width:0}
+.marca img{width:34px;height:34px;object-fit:contain;flex:none}
+.marca b{display:block;font-size:14px;font-weight:700;line-height:1.15}
+.marca small{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gris-cl);font-weight:700;margin-top:3px}
+.top .sp{flex:1}
+.ses{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ses label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gris-cl)}
+.ses input{width:210px;max-width:46vw;padding:7px 10px;border:1px solid var(--linea);border-radius:8px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;background:var(--papel)}
+.lnk{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:8px;
+  border:1px solid var(--linea);background:var(--papel);color:var(--marca);
+  font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
+.lnk:hover{background:#f7f9fc;border-color:#c9d6e6}
+.lnk.solid{background:var(--marca);color:#fff;border-color:var(--marca)}
+.lnk.solid:hover{background:var(--marca-2)}
+.lnk:disabled{opacity:.5;cursor:progress}
+
+main{flex:1;width:100%;max-width:1400px;margin:0 auto;padding:16px}
+
+.alerta{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:10px 14px;border-radius:10px;
+  background:#fff3d6;border:1px solid #f0d99a;color:#6b5410;font-size:12.5px;font-weight:600}
+.alerta .dot{width:8px;height:8px;border-radius:50%;background:#c99a13;flex:none;animation:late 1.4s infinite}
+@keyframes late{0%,100%{opacity:.35}50%{opacity:1}}
+
+.caja{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:16px 18px}
+.caja-hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.kicker{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gris-cl);
+  display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:24px;height:3px;background:var(--marca);border-radius:2px;flex:none}
+.caja-hd .sp{flex:1}
+
+/* --------- tira superior: reloj + métricas --------- */
+.tira{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:14px}
+@media (min-width:700px){ .tira{grid-template-columns:repeat(3,1fr)} .tira .reloj{grid-column:1/-1} }
+@media (min-width:1120px){ .tira{grid-template-columns:1.7fr 1fr 1fr 1fr} .tira .reloj{grid-column:auto} }
+
+.reloj .hora{font-size:clamp(34px,5vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1;
+  font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.reloj .fecha{margin-top:7px;font-size:13px;color:var(--gris)}
+.reloj .fecha::first-letter{text-transform:uppercase}
+.reloj .horario{margin-top:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.reloj .vent{font-size:12px;color:var(--gris-cl)}
+
+.metrica .val{font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.05;
+  font-variant-numeric:tabular-nums}
+.metrica .val small{font-size:15px;font-weight:700;color:var(--gris-cl);margin-left:3px}
+.metrica .pie{margin-top:7px;font-size:12px;color:var(--gris-cl);line-height:1.4}
+
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;
+  font-size:11.5px;font-weight:700;letter-spacing:.03em;background:var(--hueso);color:var(--gris)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.esp{background:var(--esp-bg);color:var(--esp)}
+.chip.off{background:var(--off-bg);color:var(--off)}
+.chip.sim{background:rgba(0,44,110,.1);color:var(--marca)}
+.chip.acento{background:rgba(219,184,74,.28);color:#6b5104}
+
+/* --------- columnas --------- */
+.cols{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:1040px){ .cols{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start} }
+.pila{display:grid;gap:14px;align-content:start}
+
+/* --------- cola de seguimientos --------- */
+.nota{font-size:12px;color:var(--gris);background:var(--hueso);border-radius:9px;padding:9px 12px;margin-bottom:12px;line-height:1.45}
+.nota b{color:var(--tinta)}
+.cola{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.fila{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;
+  padding:13px 14px;border:1px solid var(--linea);border-radius:11px;background:var(--papel)}
+@media (max-width:520px){ .fila{grid-template-columns:auto minmax(0,1fr)} .fila .est{grid-column:2;justify-self:start} }
+.fila.flash{animation:flash 1.8s ease-out}
+@keyframes flash{from{background:rgba(219,184,74,.34);border-color:var(--acento)}to{background:var(--papel);border-color:var(--linea)}}
+.fila .toque{flex:none;width:44px;height:44px;border-radius:10px;background:rgba(0,44,110,.08);color:var(--marca);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.fila .toque b{font-size:16px;font-weight:800}
+.fila .toque span{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:3px;opacity:.75}
+.fila .plantilla{font-size:13.5px;line-height:1.45;color:var(--tinta);overflow-wrap:anywhere}
+.fila .plantilla code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
+  background:var(--hueso);border:1px solid var(--linea);border-radius:6px;padding:2px 7px}
+.fila .dicho{margin-top:7px;font-size:13px;line-height:1.45;color:var(--gris);overflow-wrap:anywhere;
+  border-left:3px solid var(--linea);padding-left:10px}
+.fila .tiempo{margin-top:6px;font-size:11.5px;color:var(--gris-cl);line-height:1.5}
+.fila .tiempo b{color:var(--tinta);font-variant-numeric:tabular-nums}
+.fila .tiempo .sup{color:var(--gris-cl);font-style:italic}
+.fila.cancelado .plantilla{color:var(--gris-cl);text-decoration:line-through;text-decoration-color:#c9c9cd}
+.vacio{padding:22px 14px;border:1px dashed var(--linea);border-radius:11px;text-align:center;
+  color:var(--gris-cl);font-size:13px;line-height:1.5}
+
+/* --------- ficha --------- */
+.ficha{margin:0;display:grid;gap:0}
+.ficha .par{display:grid;grid-template-columns:minmax(0,118px) minmax(0,1fr);gap:12px;align-items:baseline;
+  padding:9px 6px;border-bottom:1px solid var(--linea);border-radius:7px}
+.ficha .par:last-child{border-bottom:0}
+.ficha .par.flash{animation:flash 1.8s ease-out}
+.ficha dt{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-cl)}
+.ficha dd{margin:0;font-size:14px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.ficha dd.na{color:#b4b4b9;font-weight:400}
+
+/* --------- bitácora --------- */
+.bit{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:320px;overflow-y:auto}
+.bit li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;
+  padding:9px 11px;border-radius:9px;background:var(--hueso);font-size:13px;line-height:1.45}
+.bit li.out{background:#eef3fa}
+.bit .meta{display:flex;flex-direction:column;gap:4px;align-items:flex-start;flex:none;width:78px}
+.bit .h{font-size:11px;color:var(--gris-cl);font-variant-numeric:tabular-nums}
+.bit .t{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-cl)}
+.bit .t.seg{color:var(--esp)} .bit .t.fh{color:#8a5a00} .bit .t.conf{color:var(--ok)}
+.bit .txt{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--tinta)}
+
+.pie-caja{margin-top:12px;font-size:11.5px;color:var(--gris-cl)}
+
+footer{border-top:1px solid var(--linea);background:var(--papel);margin-top:16px}
+.foot{max-width:1400px;margin:0 auto;padding:14px 16px;display:flex;gap:8px 18px;flex-wrap:wrap;
+  align-items:center;font-size:11.5px;color:var(--gris-cl)}
+.foot a{color:var(--gris);text-decoration:none;font-weight:600}
+.foot a:hover{color:var(--marca);text-decoration:underline}
+.foot .sp{flex:1}
+</style>
+</head>
+<body>
+
+<div class="aviso">Demostración construida por <b>IJV Agency</b> para Viel Propiedades · datos simulados</div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="marca">
+      <img src="./assets/cropped-viel.cl-png-1-180x180.png" alt="Viel Propiedades" width="34" height="34">
+      <div>
+        <b>Panel del motor</b>
+        <small>Viel Propiedades · demo</small>
+      </div>
+    </div>
+    <div class="sp"></div>
+    <div class="ses">
+      <label for="in-ses">Conversación</label>
+      <input id="in-ses" type="text" spellcheck="false" autocomplete="off">
+      <button class="lnk" id="btn-ses" type="button">Ver</button>
+      <button class="lnk" id="btn-seguir" type="button" hidden>Seguir al simulador</button>
+    </div>
+    <a class="lnk solid" href="./whatsapp" target="_blank" rel="noopener">Abrir el WhatsApp &rarr;</a>
+  </div>
+</header>
+
+<main>
+  <div class="alerta" id="alerta" hidden><span class="dot"></span><span id="alerta-txt"></span></div>
+
+  <!-- ================= reloj + métricas ================= -->
+  <section class="tira">
+    <div class="caja reloj">
+      <div class="kicker">Reloj de la demo</div>
+      <div class="hora"><span id="v-hora">—</span><span id="v-sim"></span></div>
+      <div class="fecha" id="v-fecha">—</div>
+      <div class="horario">
+        <span id="v-horario" class="chip">—</span>
+        <span class="vent" id="v-ventana"></span>
+      </div>
+    </div>
+
+    <div class="caja metrica">
+      <div class="kicker">1.ª respuesta</div>
+      <div class="val" id="v-primera">—</div>
+      <p class="pie">Lo que miden los portales para rankear.</p>
+    </div>
+
+    <div class="caja metrica">
+      <div class="kicker">Respuestas</div>
+      <div class="val" id="v-respuestas">—</div>
+      <p class="pie">Mensajes contestados en este hilo.</p>
+    </div>
+
+    <div class="caja metrica">
+      <div class="kicker">Cobertura</div>
+      <div class="val" id="v-cobertura">—</div>
+      <p class="pie">Del horario en que llegan los contactos.</p>
+    </div>
+  </section>
+
+  <!-- ================= cola + ficha ================= -->
+  <div class="cols">
+    <div class="pila">
+      <section class="caja">
+        <div class="caja-hd">
+          <span class="kicker">Cola de seguimientos</span>
+          <span class="sp"></span>
+          <span class="chip acento" id="v-factor">tiempo comprimido</span>
+          <button class="lnk solid" id="btn-disparar" type="button">Disparar ahora</button>
+        </div>
+        <p class="nota" id="nota-factor">
+          Cada toque se programa con la espera real que queda configurada en producción
+          (y se corre a la apertura si caería de madrugada). <b>En la demo el reloj va
+          comprimido</b>, así que cada fila muestra las dos cifras: lo que falta de verdad
+          y lo que falta en pantalla.
+        </p>
+        <ul class="cola" id="cola"></ul>
+        <p class="pie-caja" id="v-actualizado">—</p>
+      </section>
+
+      <section class="caja">
+        <div class="caja-hd"><span class="kicker">Bitácora del hilo</span></div>
+        <ul class="bit" id="bit"></ul>
+      </section>
+    </div>
+
+    <div class="pila">
+      <section class="caja">
+        <div class="caja-hd"><span class="kicker">Ficha del lead</span></div>
+        <dl class="ficha" id="ficha"></dl>
+        <p class="pie-caja">Se llena sola con lo que el contacto va contando. El bot no confirma día ni hora: levanta la preferencia y la ejecutiva coordina con el propietario.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot">
+    <span>Panel de demostración. Todos los datos en pantalla son simulados.</span>
+    <span class="sp"></span>
+    <a href="./politica-privacidad">Política de privacidad</a>
+    <a href="https://ijvagency.com/" target="_blank" rel="noopener">Powered by IJV</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------------- backend ---------------- */
+  var BASE_DEF='https://meta.ijvagency.com/webhook';
+  var qs=new URLSearchParams(location.search);
+  // Override de API solo en local (pruebas contra un stub); en producción, fijo.
+  var esLocal=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  var BASE=(esLocal && qs.get('api')) ? qs.get('api').replace(/\/$/,'') : BASE_DEF;
+  var EP_PANEL=BASE+'/viel-demo-panel';
+  var EP_RUN  =BASE+'/viel-demo-seguimientos-run';
+
+  var TZ='America/Santiago';
+  var K={ ses:'vdemo:sesion', off:'vdemo:offset', fac:'vdemo:factor' };
+
+  /* Espera real de cada toque cuando el motor no la manda explícita.
+     Toque 1 = las 6 h que pidió Yosmer en la llamada. */
+  var ESPERA_REAL={ 1:21600, 2:86400, 3:259200 };
+
+  var CAMPOS=[
+    ['nombre','Nombre'],['correo','Correo'],['telefono','Teléfono'],
+    ['rama','Rama'],['intencion','Intención'],['comuna','Comuna'],
+    ['tipo','Tipo'],['presupuesto','Presupuesto'],['propiedad','Propiedad'],
+    ['calificado','¿Califica?'],['ejecutiva','Ejecutiva'],
+    ['preferencia_visita','Prefiere visitar'],['estado_cierre','Estado']
+  ];
+
+  /* ---------------- utilidades ---------------- */
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function lee(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function guarda(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
+  function num(v){ var n=Number(v); return (v!==null && v!=='' && isFinite(n))?n:null; }
+
+  function aFecha(v){
+    if(v==null||v==='') return null;
+    if(v instanceof Date) return isNaN(v)?null:v;
+    if(typeof v==='number'){ var d0=new Date(v<1e11?v*1000:v); return isNaN(d0)?null:d0; }
+    var s=String(v).trim();
+    if(/^\d+$/.test(s)) return aFecha(Number(s));
+    if(/^\d{1,2}:\d{2}/.test(s)) return null;          // ya viene como "22:40"
+    var d=new Date(s.replace(' ','T'));
+    return isNaN(d)?null:d;
+  }
+  function hhmm(v){
+    var d=aFecha(v);
+    if(!d) return (v==null?'':String(v));
+    try{ return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(d); }
+    catch(e){ return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+  }
+  function fechaLarga(d){
+    try{ return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(d); }
+    catch(e){ return d.toLocaleDateString(); }
+  }
+  /* Desfase real de Chile para ese instante (respeta el horario de verano). */
+  function offsetChile(d){
+    try{
+      var pp=new Intl.DateTimeFormat('en-US',{timeZone:TZ,timeZoneName:'longOffset'}).formatToParts(d);
+      for(var i=0;i<pp.length;i++) if(pp[i].type==='timeZoneName'){
+        var m=/GMT([+-])(\d{2}):?(\d{2})?/.exec(pp[i].value);
+        if(m) return (m[1]==='-'?-1:1)*(parseInt(m[2],10)*60+parseInt(m[3]||'0',10));
+      }
+    }catch(e){}
+    return -240;
+  }
+  function isoChile(d){
+    var off=offsetChile(d), loc=new Date(d.getTime()+off*60000), p=function(n){return ('0'+n).slice(-2);};
+    var sg=off<0?'-':'+', a=Math.abs(off);
+    return loc.getUTCFullYear()+'-'+p(loc.getUTCMonth()+1)+'-'+p(loc.getUTCDate())+'T'+
+           p(loc.getUTCHours())+':'+p(loc.getUTCMinutes())+':00'+sg+p(Math.floor(a/60))+':'+p(a%60);
+  }
+  /* El reloj simulado lo fija el simulador y viaja por localStorage. El panel manda
+     el MISMO demo_now en cada llamada: si no, el motor evalúa la cola con la hora
+     real y las dos pantallas muestran horas distintas delante del cliente. */
+  function demoNow(){
+    var off=parseInt(lee(K.off)||'0',10)||0;
+    return off ? isoChile(new Date(Date.now()+off)) : null;
+  }
+
+  /* "hoy 09:00" / "mañana 09:00" / "lun 31 ago, 09:00". El motor manda ISO crudo. */
+  function fechaCorta(v){
+    var d=aFecha(v);
+    if(!d) return v==null?'':String(v);
+    var hoy=diaChile(ahoraDemo()), obj=diaChile(d);
+    var dif=Math.round((Date.parse(obj)-Date.parse(hoy))/86400000);
+    if(dif===0) return 'hoy '+hhmm(d);
+    if(dif===1) return 'mañana '+hhmm(d);
+    try{
+      return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,weekday:'short',day:'numeric',month:'short'}).format(d)
+             +', '+hhmm(d);
+    }catch(e){ return hhmm(d); }
+  }
+  /* "Hoy" y "mañana" se calculan contra el reloj de la DEMO, no contra el real:
+     con demo_now puesto, el reloj real está en otro día. */
+  function ahoraDemo(){
+    if(st.horaSrv) return new Date(st.horaSrv+(Date.now()-st.horaSync));
+    var off=parseInt(lee(K.off)||'0',10)||0;
+    return new Date(Date.now()+off);
+  }
+  function diaChile(d){
+    try{ return new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d); }
+    catch(e){ return d.toISOString().slice(0,10); }
+  }
+  /* El motor manda el NOMBRE de la plantilla aprobada (viel_seguimiento_6h), no su
+     texto. Se muestra el nombre real —es lo que se registra en WhatsApp— y, cuando
+     el toque ya salió, el texto exacto que recibió el contacto. Nada inventado. */
+  function nombrePlantilla(v){
+    var s=String(v||'').trim();
+    if(!s) return '';
+    if(/\s/.test(s)) return s;              // ya venía como texto
+    return s;
+  }
+  function esSlug(v){ var s=String(v||''); return s && !/\s/.test(s); }
+  /* Espera de política: del propio nombre (…_6h, …_24h, …_3d) o del número de toque. */
+  function esperaDeSlug(v){
+    var m=/_(\d+)\s*h\b/i.exec(String(v||'')); if(m) return Number(m[1])*3600;
+    m=/_(\d+)\s*d\b/i.exec(String(v||''));      if(m) return Number(m[1])*86400;
+    return null;
+  }
+
+  function humano(s){
+    s=Math.max(0,s);
+    // Hasta 3 min se dice en segundos: la cifra que se cronometra en la demo es "90 s".
+    if(s<180) return Math.round(s)+' s';
+    if(s<3600){ var m=s/60; return (Math.abs(m%1)>0.05? m.toFixed(1):m.toFixed(0)).replace('.',',')+' min'; }
+    var h=s/3600; return (Math.abs(h%1)>0.05? h.toFixed(1):h.toFixed(0)).replace('.',',')+' h';
+  }
+  function mmss(s){
+    s=Math.max(0,Math.round(s));
+    var h=Math.floor(s/3600), m=Math.floor((s%3600)/60), g=s%60, p=function(n){return ('0'+n).slice(-2);};
+    return h>0 ? (h+':'+p(m)+':'+p(g)) : (p(m)+':'+p(g));
+  }
+
+  /* ---------------- estado ---------------- */
+  var st={
+    sesion: qs.get('s') || lee(K.ses) || '',
+    manual: !!qs.get('s'),
+    factor: parseInt(lee(K.fac)||'240',10)||240,
+    simulado: (parseInt(lee(K.off)||'0',10)||0)!==0,
+    horaSrv:null, horaSync:0,
+    cola:[], estados:{}, ficha:{}, fichaPrev:{},
+    ultimo:0, errores:0, enVuelo:false, mensajes:[], empujados:{}, vencidos:{},
+    tPoll:null, tTick:null
+  };
+
+  function post(url,body,ms){
+    var ctl=('AbortController' in window)? new AbortController():null;
+    var to=setTimeout(function(){ if(ctl) ctl.abort(); }, ms||12000);
+    return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body),signal:ctl?ctl.signal:undefined,cache:'no-store'})
+      .then(function(r){
+        clearTimeout(to);
+        return r.text().then(function(t){
+          var j=null; try{ j=t?JSON.parse(t):null; }catch(e){}
+          if(!r.ok){ var err=new Error('HTTP '+r.status); err.status=r.status; throw err; }
+          return j||{};
+        });
+      },function(e){ clearTimeout(to); throw e; });
+  }
+  function avisa(t){
+    var a=$('alerta');
+    if(!t){ a.hidden=true; return; }
+    $('alerta-txt').textContent=t; a.hidden=false;
+  }
+  function textoError(e){
+    if(e && e.status===404) return 'El motor de la demo todavía no responde en este servidor (webhook no publicado).';
+    if(e && e.name==='AbortError') return 'El motor está tardando más de lo normal. Reintentando…';
+    return 'Sin conexión con el motor de la demo. Reintentando…';
+  }
+
+  /* ---------------- sondeo ---------------- */
+  function sondea(){
+    if(st.enVuelo || !st.sesion) return;
+    st.enVuelo=true;
+    var cuerpo={ session_id: st.sesion };
+    var dn=demoNow(); if(dn) cuerpo.demo_now=dn;
+    post(EP_PANEL,cuerpo,10000).then(function(r){
+      st.errores=0; avisa(''); st.ultimo=Date.now();
+      aplica(r||{});
+    }).catch(function(e){
+      st.errores++;
+      if(st.errores>=2) avisa(textoError(e));
+    }).then(function(){ st.enVuelo=false; });
+  }
+
+  function aplica(r){
+    // ---- reloj ----
+    var d=aFecha(r.ahora_cl);
+    if(d){ st.horaSrv=d.getTime(); st.horaSync=Date.now(); }
+    else if(typeof r.ahora_cl==='string' && r.ahora_cl){ st.horaTxt=r.ahora_cl; }
+    if(typeof r.simulado!=='undefined') st.simulado=!!r.simulado;
+    else if(r.demo_now) st.simulado=true;
+    else st.simulado=(parseInt(lee(K.off)||'0',10)||0)!==0;
+    if(r.factor_demo){ st.factor=Number(r.factor_demo)||st.factor; guarda(K.fac,st.factor); }
+    pintaReloj();
+    pintaFactor();
+
+    // ---- horario ----
+    var h=r.horario||{};
+    var el=$('v-horario');
+    if(typeof h.abierto==='undefined'){ el.className='chip'; el.textContent='—'; }
+    else if(h.abierto){ el.className='chip ok'; el.innerHTML='<span class="dot"></span>Horario de atención abierto'; }
+    else { el.className='chip esp'; el.innerHTML='<span class="dot"></span>Fuera de horario'; }
+    var vent=[];
+    if(h.ventana) vent.push(String(h.ventana));
+    var ap=h.apertura_siguiente||r.apertura_siguiente;
+    if(!h.abierto && ap) vent.push('abre '+fechaCorta(ap));
+    $('v-ventana').textContent = vent.join(' · ');
+
+    // ---- métricas ----
+    var m=r.metricas||{};
+    var pr=num(m.primer_respuesta_s);
+    $('v-primera').innerHTML = pr===null ? '—' : (pr<60 ? (Math.round(pr)+'<small>s</small>') : (mmss(pr)+'<small>min</small>'));
+    var rs=num(m.respuestas);
+    $('v-respuestas').textContent = rs===null?'—':String(rs);
+    $('v-cobertura').innerHTML = cobertura(m.cobertura);
+
+    // ---- cola ----
+    st.mensajes = Array.isArray(r.mensajes)?r.mensajes:[];
+    pintaCola(Array.isArray(r.cola)?r.cola:[]);
+    // ---- ficha ----
+    pintaFicha(r.ficha||{});
+    // ---- bitácora ----
+    pintaBitacora(Array.isArray(r.mensajes)?r.mensajes:[]);
+  }
+
+  function cobertura(v){
+    if(v==null||v==='') return '—';
+    if(typeof v==='string' && !/^\d+([.,]\d+)?$/.test(v.trim())) return esc(v);
+    var n=Number(String(v).replace(',','.'));
+    if(!isFinite(n)) return esc(String(v));
+    if(n<=1) n=n*100;
+    return Math.round(n)+'<small>%</small>';
+  }
+
+  /* ---------------- reloj ---------------- */
+  function pintaReloj(){
+    var d=null;
+    if(st.horaSrv) d=new Date(st.horaSrv+(Date.now()-st.horaSync));
+    if(d){
+      $('v-hora').textContent=hhmm(d);
+      $('v-fecha').textContent=fechaLarga(d);
+    }else if(st.horaTxt){
+      $('v-hora').textContent=st.horaTxt; $('v-fecha').textContent='';
+    }
+    $('v-sim').innerHTML = st.simulado
+      ? '<span class="chip sim">(simulado)</span>'
+      : '<span class="chip">hora real de Chile</span>';
+  }
+  function pintaFactor(){
+    $('v-factor').textContent = st.factor>1
+      ? ('tiempo comprimido ×'+st.factor)
+      : 'tiempo real (sin comprimir)';
+  }
+
+  /* ---------------- cola ---------------- */
+  function esperaReal(it){
+    var n=num(it.espera_real_s!=null?it.espera_real_s:(it.espera_s!=null?it.espera_s:it.offset_s));
+    if(n!==null && n>0) return n;
+    var slug=esperaDeSlug(it.plantilla); if(slug) return slug;
+    return ESPERA_REAL[Number(it.toque)]||null;
+  }
+  function normEstado(e,it){
+    var s=String(e||'').toLowerCase();
+    if(/cancel/.test(s)) return 'cancelado';
+    if(/env|entreg|sent|dispar/.test(s)) return 'enviado';
+    if(/pend|program|cola|espera|queue/.test(s)) return 'pendiente';
+    if(it && it.enviado_at) return 'enviado';
+    return s||'pendiente';
+  }
+  /* Texto exacto del toque que YA salió: se busca entre los mensajes de tipo
+     seguimiento, en orden. Si todavía no salió, no hay texto que mostrar. */
+  function textoEnviado(idx){
+    var segs=(st.mensajes||[]).filter(function(m){ return String(m.tipo||'')==='seguimiento'; });
+    return segs[idx] ? String(segs[idx].texto||'') : '';
+  }
+
+  function pintaCola(cola){
+    st.cola=cola;
+    var ul=$('cola');
+    if(!cola.length){
+      ul.innerHTML='<li class="vacio">Todavía no hay seguimientos programados.<br>Escribe desde el WhatsApp y el motor arma la cola en el mismo momento.</li>';
+      return;
+    }
+    var html='', nuevos=[], enviados=0;
+    cola.forEach(function(it,i){
+      var id=String(it.id!=null?it.id:('t'+(it.toque||i)));
+      var est=normEstado(it.estado,it);
+      var real=esperaReal(it);
+      var dueIn=num(it.due_in_s);
+      var plant=nombrePlantilla(it.plantilla);
+      var texto = est==='enviado' ? textoEnviado(enviados++) : '';
+
+      // Línea 1: LAS DOS CIFRAS JUNTAS — la espera real que queda en producción y
+      // su equivalente en esta demo — más el momento exacto en que vence o salió.
+      // El motor ya programa `due_at` con el reloj comprimido, así que `due_in_s`
+      // se muestra tal cual: es lo que se espera en la sala.
+      var demoPol = (real && st.factor>1) ? real/st.factor : real;
+      var corrido = (est==='pendiente' && dueIn!==null && demoPol && dueIn > demoPol*2+30);
+      var l1=[];
+      if(real) l1.push('programado para: +'+humano(real)+(st.factor>1?' (demo: '+humano(demoPol)+')':''));
+      // El motor sella el envío con su reloj real; mezclarlo con el día simulado
+      // daría un "enviado mañana" absurdo. Se muestra solo la hora, como WhatsApp.
+      if(est==='enviado') l1.push('enviado '+esc(hhmm(it.enviado_at||it.due_at)));
+      else if(est==='cancelado') l1.push('cancelado: el contacto respondió antes');
+      else if(it.due_at) l1.push((corrido?'corrido a la apertura, vence ':'vence ')+esc(fechaCorta(it.due_at)));
+
+      // Línea 2: la cuenta regresiva viva.
+      var l2='';
+      if(est==='pendiente' && dueIn!==null){
+        var target=Date.now()+dueIn*1000;
+        l2='<p class="tiempo cuenta" data-id="'+esc(id)+'" data-t="'+target+'">'+lineaEspera(dueIn)+'</p>';
+      }
+
+      var chip = est==='enviado' ? '<span class="chip ok"><span class="dot"></span>enviado</span>'
+               : est==='cancelado' ? '<span class="chip off"><span class="dot"></span>cancelado</span>'
+               : (it.vencido ? '<span class="chip esp"><span class="dot"></span>vencido</span>'
+                             : '<span class="chip esp"><span class="dot"></span>en cola</span>');
+      if(!st.estados[id] || st.estados[id]!==est) nuevos.push(id);
+      st.estados[id]=est;
+
+      html+='<li class="fila '+est+'" data-id="'+esc(id)+'">'
+          +   '<span class="toque"><b>'+esc(String(it.toque||'·'))+'</b><span>toque</span></span>'
+          +   '<div>'
+          +     (esSlug(plant) ? '<p class="plantilla"><code>'+esc(plant)+'</code></p>'
+                               : '<p class="plantilla">'+esc(plant||'—')+'</p>')
+          +     (texto ? '<p class="dicho">'+esc(texto)+'</p>' : '')
+          +     '<p class="tiempo">'+l1.join(' · ')+'</p>'
+          +     l2
+          +   '</div>'
+          +   '<span class="est">'+chip+'</span>'
+          + '</li>';
+    });
+    ul.innerHTML=html;
+    nuevos.forEach(function(id){
+      var li=ul.querySelector('[data-id="'+(window.CSS&&CSS.escape?CSS.escape(id):id)+'"]');
+      if(li){ li.classList.add('flash'); setTimeout(function(){ li.classList.remove('flash'); },1900); }
+    });
+  }
+
+  /* Cuenta regresiva de lo que falta EN LA SALA. Bajo una hora, al segundo (es lo
+     que el cliente cronometra); por encima, en horas. */
+  function lineaEspera(seg){
+    seg=Math.max(0,seg);
+    return 'faltan <b>'+(seg<3600 ? mmss(seg) : esc(humano(seg)))+'</b>';
+  }
+
+  function tick(){
+    pintaReloj();
+    var ns=document.querySelectorAll('#cola .cuenta');
+    for(var i=0;i<ns.length;i++){
+      var t=Number(ns[i].getAttribute('data-t'));
+      if(!t) continue;
+      var falta=(t-Date.now())/1000;
+      ns[i].innerHTML = lineaEspera(falta);
+      // Red de seguridad de la demo: si el reloj comprimido llegó a cero y el motor
+      // todavía no lo mandó, se empuja UNA vez por fila (el botón sigue estando).
+      if(falta<=0){
+        var id=ns[i].getAttribute('data-id');
+        if(id && !st.empujados[id]){
+          var espera=st.vencidos[id]||(st.vencidos[id]=Date.now());
+          if(Date.now()-espera>5000){ st.empujados[id]=1; dispara(false); }
+        }
+      }
+    }
+    var el=$('v-actualizado');
+    if(st.ultimo){
+      var s=Math.round((Date.now()-st.ultimo)/1000);
+      el.textContent='Sincronizado con el motor hace '+(s<2?'1 segundo':(s+' segundos'))+
+        ' · conversación '+st.sesion;
+    }else if(!st.sesion){
+      el.textContent='Abre el WhatsApp de la demo y escribe un mensaje para empezar una conversación.';
+    }
+  }
+
+  /* ---------------- ficha ---------------- */
+  function pintaFicha(f){
+    var html='', cambios=[];
+    CAMPOS.forEach(function(c){
+      var k=c[0], v=f[k];
+      if(k==='calificado' && typeof v==='boolean') v = v?'Sí':'No';
+      var vacio = (v===null||v===undefined||v==='');
+      var antes = st.fichaPrev[k];
+      if(!vacio && String(v)!==String(antes==null?'':antes)) cambios.push(k);
+      st.fichaPrev[k]= vacio?'':String(v);
+      html+='<div class="par" data-k="'+k+'"><dt>'+esc(c[1])+'</dt>'
+          + '<dd'+(vacio?' class="na"':'')+'>'+(vacio?'—':esc(String(v)))+'</dd></div>';
+    });
+    $('ficha').innerHTML=html;
+    cambios.forEach(function(k){
+      var el=$('ficha').querySelector('[data-k="'+k+'"]');
+      if(el){ el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); },1900); }
+    });
+  }
+
+  /* ---------------- bitácora ---------------- */
+  function pintaBitacora(ms){
+    if(!ms.length){ $('bit').innerHTML='<li class="vacio" style="grid-column:1/-1">Sin mensajes todavía.</li>'; return; }
+    var html='';
+    ms.forEach(function(m){
+      var out = m.dir!=='in';
+      var tipo=String(m.tipo||'chat');
+      var cls = tipo==='seguimiento'?'seg':(tipo==='fuera_horario'?'fh':(tipo==='confirmacion'?'conf':''));
+      var etq = tipo==='seguimiento'?'seguimiento':(tipo==='fuera_horario'?'fuera de horario':
+                (tipo==='confirmacion'?'confirmación':(out?'agente':'contacto')));
+      html+='<li class="'+(out?'out':'in')+'">'
+          +   '<span class="meta"><span class="h">'+esc(hhmm(m.ts))+'</span>'
+          +   '<span class="t '+cls+'">'+esc(etq)+'</span></span>'
+          +   '<span class="txt">'+esc(m.texto!=null?m.texto:'')+'</span>'
+          + '</li>';
+    });
+    $('bit').innerHTML=html;
+  }
+
+  /* ---------------- disparar ---------------- */
+  /* manual=true -> el botón (fuerza el siguiente toque). manual=false -> el empujón
+     automático cuando la cuenta regresiva de la demo llegó a cero. */
+  function dispara(manual){
+    if(!st.sesion) return;
+    var b=$('btn-disparar'), txt=b.textContent;
+    if(manual!==false){ b.disabled=true; b.textContent='Disparando…'; }
+    var cuerpo={ session_id:st.sesion, forzar:(manual!==false) };
+    var dn=demoNow(); if(dn) cuerpo.demo_now=dn;
+    post(EP_RUN,cuerpo,15000).then(function(){
+      avisa(''); st.errores=0;
+    }).catch(function(e){
+      if(manual!==false) avisa(textoError(e));
+    }).then(function(){
+      if(manual!==false){ b.disabled=false; b.textContent=txt; }
+      st.enVuelo=false; sondea();
+      setTimeout(sondea,1500);
+    });
+  }
+
+  /* ---------------- arranque ---------------- */
+  function init(){
+    $('in-ses').value=st.sesion;
+    $('btn-seguir').hidden=!st.manual;
+
+    $('btn-ses').addEventListener('click',function(){
+      var v=$('in-ses').value.trim();
+      if(!v) return;
+      st.sesion=v; st.manual=true; $('btn-seguir').hidden=false;
+      st.estados={}; st.fichaPrev={}; st.ultimo=0;
+      st.enVuelo=false; sondea();
+    });
+    $('in-ses').addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); $('btn-ses').click(); } });
+    $('btn-seguir').addEventListener('click',function(){
+      var v=lee(K.ses)||'';
+      st.manual=false; $('btn-seguir').hidden=true;
+      if(v && v!==st.sesion){ st.sesion=v; $('in-ses').value=v; st.estados={}; st.fichaPrev={}; }
+      st.enVuelo=false; sondea();
+    });
+    $('btn-disparar').addEventListener('click',function(){ dispara(true); });
+
+    // El simulador abrió otra conversación: el panel la sigue salvo que se haya fijado una a mano.
+    window.addEventListener('storage',function(ev){
+      if(ev.key===K.ses && ev.newValue && !st.manual && ev.newValue!==st.sesion){
+        st.sesion=ev.newValue; $('in-ses').value=st.sesion;
+        st.estados={}; st.fichaPrev={}; st.ultimo=0; sondea();
+      }
+      if(ev.key===K.fac && ev.newValue){ st.factor=parseInt(ev.newValue,10)||st.factor; pintaFactor(); }
+      if(ev.key===K.off){ st.simulado=(parseInt(ev.newValue||'0',10)||0)!==0; pintaReloj(); }
+    });
+
+    pintaFactor(); pintaReloj(); pintaCola([]); pintaFicha({}); pintaBitacora([]); tick();
+
+    // Un intervalo de sondeo y uno de reloj; los dos se cierran al salir.
+    // Igual que el simulador: oculta la ventana, se sondea más lento pero no se apaga.
+    var pulso=0;
+    st.tPoll=setInterval(function(){ pulso++; if(!document.hidden || pulso%3===0) sondea(); },3000);
+    st.tTick=setInterval(tick,1000);
+    document.addEventListener('visibilitychange',function(){ if(!document.hidden) sondea(); });
+    window.addEventListener('pagehide',function(){
+      clearInterval(st.tPoll); clearInterval(st.tTick); st.tPoll=null; st.tTick=null;
+    });
+    sondea();
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+</body>
+</html>

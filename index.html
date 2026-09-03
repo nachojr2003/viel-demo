@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inicio - Viel</title>
+<link rel="icon" href="./assets/cropped-viel.cl-png-1-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="./assets/cropped-viel.cl-png-1-180x180.png">
+
+<!-- Mismas familias que carga el original -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   Réplica viel.cl — un solo archivo, sin frameworks.
+   El original es WordPress + Elementor con secciones hechas en Tailwind CDN;
+   acá las medidas están traducidas a CSS plano respetando la retícula real:
+   contenedor Elementor 1140px con padding-block 10px, y dentro cada sección
+   con su propio padding Tailwind (px-20 / py-20 en escritorio).
+   ========================================================================== */
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  color:#0d141b;
+  background:#ffffff;
+  /* Sin -webkit-font-smoothing a propósito: el original no lo declara y
+     forzar `antialiased` adelgaza los trazos ~7% en el H1 (medido). */
+}
+/* height:auto es obligatorio: los width/height del <img> anulan aspect-ratio
+   y descuadran las grillas en móvil. */
+img{max-width:100%;height:auto;display:block;border:0}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p{margin:0}
+button{font-family:inherit}
+
+/* Iconos ---------------------------------------------------------------- */
+.ms,.mi{
+  font-weight:400;font-style:normal;font-size:24px;line-height:1;
+  letter-spacing:normal;text-transform:none;display:inline-block;
+  white-space:nowrap;word-wrap:normal;direction:ltr;
+  -webkit-font-feature-settings:'liga';-webkit-font-smoothing:antialiased;
+}
+.ms{font-family:'Material Symbols Outlined';font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.mi{font-family:'Material Icons Outlined'}
+
+/* Contenedor Elementor (max 1140, padding-block 10, sin padding lateral) -- */
+.el-con{max-width:1140px;margin:0 auto;padding:10px 0}
+
+/* ==========================  HEADER  ==================================== */
+.site-header{background:#ffffff}
+.hdr{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:0}
+/* Medidas reales del kit de Elementor (css-07 del original): el widget del logo
+   ocupa 44.615% del contenedor y la imagen el 27% de ese widget → 137px en
+   escritorio y ~45px en móvil, sin hardcodear ninguno de los dos. */
+.hdr-logo{display:block;flex:0 0 auto;width:44.615%;max-width:44.615%;text-align:start}
+.hdr-logo img{width:27%;max-width:36%}
+.hdr-nav{display:flex;align-items:center;padding:10px}
+.hdr-nav a{
+  display:block;position:relative;
+  font-size:16px;line-height:20px;font-weight:400;
+  color:#747070;padding:13px 20px;
+  transition:color .2s ease;
+}
+.hdr-nav a:hover{color:#23346c}
+.hdr-nav a.is-active{color:#23346c}
+.hdr-nav a.is-active::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:#23346c;
+}
+.hdr-toggle{display:none}
+
+/* ==========================  HERO  ====================================== */
+.hero{position:relative;overflow:hidden;background:#ffffff}
+.hero-inner{max-width:1280px;margin:0 auto;padding:48px 24px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:48px;align-items:center}
+.hero-text{display:flex;flex-direction:column;gap:32px}
+.hero-copy{display:flex;flex-direction:column;gap:16px}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:4px 12px;border-radius:9999px;
+  background:rgba(0,44,110,.1);color:#002c6e;
+  width:-moz-fit-content;width:fit-content;
+  font-size:12px;line-height:16px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+
+.hero h1{
+  font-size:36px;line-height:1.25;font-weight:900;
+  letter-spacing:-0.033em;color:#0d141b;
+}
+.hero-sub{
+  font-size:18px;line-height:1.625;font-weight:400;
+  color:#4c739a;max-width:42rem;
+}
+
+.hero-ctas{display:flex;flex-wrap:wrap;gap:16px}
+.btn{
+  display:flex;align-items:center;justify-content:center;
+  height:56px;padding:0 32px;border-radius:9999px;border:0;
+  font-size:16px;line-height:24px;font-weight:700;
+  cursor:pointer;transition:box-shadow .3s ease,background-color .3s ease;
+}
+.btn-primary{background:#002c6e;color:#ffffff}
+.btn-primary:hover{box-shadow:0 20px 25px -5px rgba(0,44,110,.2),0 8px 10px -6px rgba(0,44,110,.2)}
+.btn-ghost{background:transparent;color:#002c6e;border:2px solid rgba(0,44,110,.2)}
+.btn-ghost:hover{background:#f8fafc}
+
+.hero-stats{display:flex;align-items:center;gap:32px;padding-top:16px}
+.stat{display:flex;flex-direction:column;text-align:center}
+.stat b{font-size:24px;line-height:32px;font-weight:900;color:#002c6e}
+.stat span{font-size:12px;line-height:16px;font-weight:500;color:#4c739a;text-transform:uppercase}
+.stat-sep{width:1px;height:40px;background:#cfdbe7}
+
+.hero-media{position:relative}
+/* rounded-xl = 3rem (48px), no 2.5rem: el original carga el CDN de Tailwind
+   tres veces y la última config de la página —la de Oficinas— es la que manda
+   sobre todo el documento. Medido sobre el screenshot: R≈48. */
+.hero-photo{
+  position:relative;z-index:10;width:100%;aspect-ratio:1/1;
+  background-image:url('./assets/hero-casa-viel.jpg');
+  background-position:center;background-size:cover;background-repeat:no-repeat;
+  border-radius:48px;
+  box-shadow:0 25px 50px -12px rgba(0,0,0,.25);
+}
+.hero-photo::after{
+  content:'';position:absolute;inset:0;border-radius:48px;
+  background:linear-gradient(to top,rgba(0,44,110,.6),rgba(0,44,110,0));
+}
+.hero-glow{position:absolute;border-radius:9999px;z-index:0}
+.hero-glow.a{top:-24px;right:-24px;width:128px;height:128px;background:rgba(0,44,110,.1);filter:blur(64px)}
+.hero-glow.b{bottom:-24px;left:-24px;width:192px;height:192px;background:rgba(0,44,110,.05);filter:blur(64px)}
+
+@media (min-width:768px){
+  .hero-inner{padding:80px}
+  .hero h1{font-size:60px;line-height:1}
+  .hero-sub{font-size:20px;line-height:28px}
+}
+@media (min-width:1024px){
+  .hero-grid{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .hero-text{grid-column:span 7/span 7}
+  .hero-media{grid-column:span 5/span 5}
+}
+
+/* ==========================  ECOSISTEMA  ================================ */
+.eco{
+  width:100%;background:#ffffff;padding:96px 0;
+  display:flex;justify-content:center;
+  border-top:1px solid #e7edf3;border-bottom:1px solid #e7edf3;
+  overflow:hidden;
+}
+.eco-inner{width:100%;max-width:1200px;padding:0 16px}
+.eco-head{text-align:center;margin-bottom:64px}
+.eco-head h2{font-size:36px;line-height:1.1;font-weight:900;color:#002c6e}
+.eco-head p{
+  margin-top:16px;font-size:18px;line-height:1.625;
+  color:#4c739a;max-width:42rem;margin-left:auto;margin-right:auto;
+}
+.eco-row{
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;gap:48px;
+}
+.eco-line{display:none}
+.eco-card{position:relative;z-index:10;width:100%;max-width:340px}
+.eco-card.is-main{max-width:360px}
+.eco-box{
+  background:#f6f7f8;padding:32px;border-radius:24px;
+  border:1px solid rgba(0,44,110,.05);
+  box-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  transition:transform .3s ease,border-color .3s ease;
+}
+.eco-card:hover .eco-box{transform:translateY(-8px)}
+.eco-frame{
+  background:#002c6e;padding:4px;border-radius:2.2rem;
+  box-shadow:0 25px 50px -12px rgba(0,44,110,.3);
+  transition:transform .3s ease;
+}
+.eco-card.is-main:hover .eco-frame{transform:translateY(-8px)}
+.eco-frame > div{
+  background:#ffffff;padding:32px;border-radius:2rem;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.eco-ico{
+  width:80px;height:80px;border-radius:16px;background:#ffffff;
+  box-shadow:inset 0 2px 4px 0 rgba(0,0,0,.05);
+  display:flex;align-items:center;justify-content:center;
+  color:#002c6e;margin-bottom:24px;
+}
+.eco-ico.is-solid{background:#002c6e;color:#ffffff;box-shadow:none}
+.eco-ico .ms{font-size:36px}
+.eco-kicker{
+  font-size:14px;line-height:20px;font-weight:700;color:#002c6e;
+  opacity:.6;text-transform:uppercase;letter-spacing:.2em;margin-bottom:8px;
+}
+.eco-name{font-size:24px;line-height:32px;font-weight:900;color:#002c6e;margin-bottom:16px}
+.eco-txt{font-size:14px;line-height:1.625;color:#4c739a}
+.eco-box .eco-txt{margin-bottom:24px}
+.eco-link{
+  width:100%;height:48px;background:#002c6e;color:#ffffff;
+  border-radius:3rem;font-weight:700;font-size:14px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background-color .2s ease;
+}
+.eco-link:hover{background:#001a42}
+.eco-link .ms{font-size:14px}
+
+@media (min-width:1024px){
+  .eco-row{flex-direction:row;gap:16px}
+  .eco-line{
+    display:block;position:absolute;top:50%;left:0;width:100%;height:2px;
+    background:rgba(0,44,110,.1);transform:translateY(-50%);z-index:0;
+  }
+}
+
+/* ==========================  OFICINAS  ================================== */
+.oficinas{width:100%;display:flex;flex-direction:column;min-height:600px;overflow:hidden}
+.oficina{position:relative;flex:1 1 0;overflow:hidden;min-height:400px}
+.oficina.v{background:#002c6e}
+.oficina.stgo{background:#001a42}
+.oficina-bg{
+  position:absolute;inset:0;opacity:.6;
+  background-position:center;background-size:cover;background-repeat:no-repeat;
+  transition:transform .7s ease;
+}
+.oficina:hover .oficina-bg{transform:scale(1.1)}
+.oficina.v .oficina-bg{background-image:url('./assets/oficina-v-region.jpg')}
+.oficina.stgo .oficina-bg{background-image:url('./assets/hero-casa-viel.jpg')}
+.oficina-veil{position:absolute;inset:0}
+.oficina.v .oficina-veil{background:linear-gradient(to top,#002c6e,rgba(0,44,110,.4),rgba(0,44,110,0))}
+.oficina.stgo .oficina-veil{background:linear-gradient(to top,#001a42,rgba(0,26,66,.4),rgba(0,26,66,0))}
+.oficina-body{
+  position:relative;height:100%;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:48px;color:#ffffff;gap:24px;
+}
+.oficina-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:4px 12px;border-radius:9999px;
+  background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  font-size:12px;line-height:16px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  width:-moz-fit-content;width:fit-content;
+}
+.oficina-tag .ms{font-size:14px}
+.oficina h3{font-size:48px;line-height:1.1;font-weight:900;margin-bottom:16px}
+.oficina-sub{font-size:24px;line-height:32px;font-weight:600;opacity:.9}
+.oficina-dir{font-size:14px;line-height:20px;opacity:.8;margin-top:8px}
+.oficina-foot{display:flex;flex-direction:column;gap:16px;max-width:28rem}
+.oficina-foot p{font-size:18px;line-height:1.625;opacity:.8}
+.oficina-cta{
+  margin-top:16px;width:-moz-fit-content;width:fit-content;
+  padding:0 32px;height:48px;border-radius:9999px;border:0;
+  background:#ffffff;color:#002c6e;font-weight:700;font-size:16px;
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:opacity .3s ease;
+}
+.oficina-cta:hover{opacity:.9}
+
+@media (min-width:1024px){
+  .oficinas{flex-direction:row}
+  .oficina-body{padding:80px}
+  .oficina h3{font-size:72px;line-height:1}
+}
+
+/* ==========================  PROPIEDADES  =============================== */
+.viel-root{
+  font-family:'Inter',sans-serif;background-color:#f8fafc;
+  padding:40px 30px;border-radius:40px;margin:20px 0;position:relative;
+}
+.viel-header-main{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;gap:20px}
+.viel-title-group{display:flex;flex-direction:column;gap:15px}
+.viel-title-group h2{margin:0;color:#002c6e;font-size:32px;font-weight:800}
+.viel-switch-box{background:#e2e8f0;padding:5px;border-radius:14px;display:flex;width:-moz-fit-content;width:fit-content}
+.viel-switch-btn{border:none;padding:8px 20px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;transition:all .3s ease;font-family:'Inter',sans-serif}
+.viel-switch-btn.active{background:#002c6e;color:#fff}
+.viel-switch-btn.inactive{background:transparent;color:#64748b}
+.viel-view-all{display:flex;align-items:center;gap:8px;color:#002c6e;font-weight:700;font-size:14px;transition:opacity .3s;padding-bottom:5px}
+.viel-view-all:hover{opacity:.7}
+.viel-view-all .mi{font-size:18px}
+.viel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px}
+.viel-card{background:#fff;border-radius:30px;overflow:hidden;border:1px solid #f1f5f9;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.03);transition:transform .3s}
+.viel-card:hover{transform:translateY(-8px)}
+.viel-img-container{height:230px;position:relative}
+.viel-img-container img{width:100%;height:100%;object-fit:cover}
+.viel-badge-new{position:absolute;top:15px;left:15px;background:#fff;color:#002c6e;padding:5px 12px;border-radius:15px;font-size:9px;font-weight:800;text-transform:uppercase;z-index:2}
+.viel-body{padding:25px;flex-grow:1}
+.viel-body h3{margin:0 0 10px;color:#002c6e;font-size:19px;font-weight:800}
+.viel-loc{color:#94a3b8;font-size:13px;display:flex;align-items:center;gap:5px;margin-bottom:15px}
+.viel-loc .mi{font-size:16px}
+.viel-specs{display:flex;justify-content:space-between;padding:15px 0;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;margin-bottom:20px}
+.viel-spec-item{display:flex;align-items:center;gap:5px;font-weight:600;font-size:13px;color:#475569}
+.viel-spec-item .mi{color:#cbd5e1;font-size:18px}
+.viel-card-footer{display:flex;justify-content:space-between;align-items:center}
+.viel-card-price{color:#002c6e;font-size:20px;font-weight:900}
+.viel-circle-btn{width:40px;height:40px;border-radius:50%;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;color:#002c6e;background:transparent;cursor:pointer;padding:0}
+.viel-circle-btn:hover{background:#002c6e;color:#fff;border-color:#002c6e}
+@media(max-width:600px){
+  .viel-header-main{flex-direction:column;align-items:flex-start}
+  .viel-view-all{align-self:flex-end}
+}
+
+/* ==========================  FOOTER  ==================================== */
+.viel-footer{background:#ffffff;border-top:1px solid #cfdbe7;padding:40px 20px;width:100%}
+.viel-footer-container{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:30px}
+.viel-footer-brand{min-width:240px}
+.viel-logo-wrapper{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.viel-company-name{font-family:'Inter',sans-serif;font-weight:800;font-size:18px;color:#002c6e}
+.viel-copyright{font-size:11px;color:#4c739a;margin:0}
+.viel-footer-offices{flex:1 1 520px;min-width:320px}
+.viel-offices-title{font-weight:800;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#0d141b;margin-bottom:14px}
+.viel-offices-grid{display:flex;flex-direction:column;gap:18px}
+.viel-office-block{display:flex;flex-direction:column;gap:10px}
+.viel-office-region{font-weight:800;font-size:18px;color:#002c6e}
+.viel-office-row{display:grid;grid-template-columns:1fr 220px;gap:22px;align-items:start}
+.viel-office-col{display:flex;flex-direction:column;gap:6px}
+.viel-office-label{font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#0d141b}
+.viel-office-text{margin:0;font-size:14px;color:#4c739a;line-height:1.5}
+.viel-office-link{color:#4c739a;font-weight:600;transition:color .2s ease}
+.viel-office-link:hover{color:#002c6e}
+.viel-footer-links{display:flex;gap:22px;align-items:center;justify-content:flex-end;min-width:220px}
+.viel-footer-links a{font-size:14px;font-weight:600;color:#4c739a;transition:color .2s ease}
+.viel-footer-links a:hover{color:#002c6e}
+@media (max-width:920px){
+  .viel-footer-container{align-items:flex-start}
+  .viel-footer-links{justify-content:flex-start}
+}
+@media (max-width:768px){
+  .viel-footer-container{flex-direction:column;text-align:left}
+  .viel-footer-brand{min-width:0}
+  .viel-footer-links{justify-content:flex-start;flex-wrap:wrap}
+  .viel-office-row{grid-template-columns:1fr;gap:10px}
+}
+
+/* ==========================  MÓVIL  ===================================== */
+@media (max-width:767px){
+  .el-con{padding:10px}
+  /* En móvil el contenedor del header lleva --flex-wrap-mobile:wrap → el menú
+     salta a su propia fila y el toggle queda centrado (margin:0 auto). */
+  .hdr{flex-wrap:wrap}
+  .hdr-nav{flex:0 0 100%;width:100%;justify-content:center;padding:10px 10px 40px}
+  .hdr-nav a{display:none}
+  /* Toggle de Elementor: icono de 22px con padding .25em y fondo rgba(0,0,0,.05)
+     → caja de 33×33 exacta, igual que la medida en el original. */
+  .hdr-toggle{
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;line-height:1;padding:.25em;
+    background:rgba(0,0,0,.05);border:0;border-radius:3px;cursor:pointer;
+  }
+  .hdr-toggle svg{width:1em;height:1em;fill:#33373d;display:block}
+
+  .eco{padding:64px 0}
+  .eco-head h2{font-size:30px}
+  .oficina h3{font-size:36px}
+  .oficina-body{padding:32px}
+  .oficina-sub{font-size:20px}
+  .viel-root{padding:24px 16px;border-radius:24px}
+  .viel-grid{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header">
+  <div class="el-con">
+    <div class="hdr">
+      <a class="hdr-logo" href="#top" aria-label="Viel Propiedades">
+        <img src="./assets/cropped-viel.cl-png-1.png" width="512" height="512" alt="Viel.cl Propiedades">
+      </a>
+      <nav class="hdr-nav" aria-label="Menu">
+        <a class="is-active" href="#top" aria-current="page">Inicio</a>
+        <a href="#ecosistema">Quienes Somos</a>
+        <a href="#propiedades">Propiedades</a>
+        <button class="hdr-toggle" type="button" aria-label="Menu">
+          <svg aria-hidden="true" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M104 333H896C929 333 958 304 958 271S929 208 896 208H104C71 208 42 237 42 271S71 333 104 333ZM104 583H896C929 583 958 554 958 521S929 458 896 458H104C71 458 42 487 42 521S71 583 104 583ZM104 833H896C929 833 958 804 958 771S929 708 896 708H104C71 708 42 737 42 771S71 833 104 833Z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= HERO ============================= -->
+<section class="hero" id="top">
+  <div class="el-con">
+    <div class="hero-inner">
+      <div class="hero-grid">
+
+        <div class="hero-text">
+          <div class="hero-copy">
+            <div class="badge">
+              <span class="ms">verified</span>
+              Asesoría Profesional Inmobiliaria
+            </div>
+
+            <h1>Compra, venta y arriendo de propiedades con asesoría inmobiliaria experta</h1>
+
+            <p class="hero-sub">Servicio profesional de asesoría inmobiliaria especializado en la compra, venta, arriendo y gestión de propiedades residenciales y comerciales.</p>
+          </div>
+
+          <div class="hero-ctas">
+            <button class="btn btn-primary" type="button">Cotiza según tu renta</button>
+            <a class="btn btn-ghost" href="#oficinas">Hablar con un experto</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat"><b>500+</b><span>Ventas Cerradas</span></div>
+            <div class="stat-sep"></div>
+            <div class="stat"><b>15+</b><span>Años Experiencia</span></div>
+            <div class="stat-sep"></div>
+            <div class="stat"><b>98%</b><span>Clientes Felices</span></div>
+          </div>
+        </div>
+
+        <div class="hero-media">
+          <div class="hero-photo"></div>
+          <div class="hero-glow a"></div>
+          <div class="hero-glow b"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== ECOSISTEMA ========================= -->
+<section class="eco" id="ecosistema">
+  <div class="eco-inner">
+
+    <div class="eco-head">
+      <h2>El Ecosistema Viel</h2>
+      <p>Nuestra estructura está diseñada para cubrir todas las necesidades del mercado inmobiliario actual a través de unidades especializadas.</p>
+    </div>
+
+    <div class="eco-row">
+      <div class="eco-line"></div>
+
+      <div class="eco-card">
+        <div class="eco-box">
+          <div class="eco-ico"><span class="ms">home_repair_service</span></div>
+          <div class="eco-kicker">Administración</div>
+          <div class="eco-name">VielPM</div>
+          <p class="eco-txt">Gestión integral de propiedades para propietarios que buscan tranquilidad y rentabilidad asegurada.</p>
+          <a class="eco-link" href="#oficinas">Visitar sitio <span class="ms">open_in_new</span></a>
+        </div>
+      </div>
+
+      <div class="eco-card is-main">
+        <div class="eco-frame">
+          <div>
+            <div class="eco-ico is-solid"><span class="ms">real_estate_agent</span></div>
+            <div class="eco-kicker">Corretaje</div>
+            <div class="eco-name">Viel.CL</div>
+            <p class="eco-txt">El corazón de nuestro ecosistema. Conexión experta entre oferta y demanda en el mercado habitacional, comercial y de inversión.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="eco-card">
+        <div class="eco-box">
+          <div class="eco-ico"><span class="ms">monitoring</span></div>
+          <div class="eco-kicker">Inversión</div>
+          <div class="eco-name">Capital Q</div>
+          <p class="eco-txt">Asesoría estratégica en activos inmobiliarios para maximizar el crecimiento de tu patrimonio.</p>
+          <a class="eco-link" href="#oficinas">Visitar sitio <span class="ms">open_in_new</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ OFICINAS ========================== -->
+<section class="oficinas" id="oficinas">
+
+  <div class="oficina v">
+    <div class="oficina-bg"></div>
+    <div class="oficina-veil"></div>
+    <div class="oficina-body">
+      <div class="oficina-tag"><span class="ms">beach_access</span> Zona Central</div>
+      <div>
+        <h3>Oficina V Región</h3>
+        <p class="oficina-sub">Viña, Reñaca &amp; Concón</p>
+        <p class="oficina-dir">Las Pelargonias 842, ofc. 401, Concón</p>
+      </div>
+      <div class="oficina-foot">
+        <p>Especialistas en el mercado inmobiliario de la V Región, con enfoque estratégico en propiedades cerca del mar.</p>
+        <button class="oficina-cta" type="button">Contactar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="oficina stgo">
+    <div class="oficina-bg"></div>
+    <div class="oficina-veil"></div>
+    <div class="oficina-body">
+      <div class="oficina-tag"><span class="ms">apartment</span> Hub Metropolitano</div>
+      <div>
+        <h3>Oficina Santiago</h3>
+        <p class="oficina-sub">Vitacura &amp; Sector Oriente</p>
+        <p class="oficina-dir">Alonso de Córdova 2348, Vitacura</p>
+      </div>
+      <div class="oficina-foot">
+        <p>Nuestra sede central en el corazón financiero de la capital, con atención personalizada y enfoque estratégico urbano.</p>
+        <button class="oficina-cta" type="button">Contactar</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ======================= PROPIEDADES DESTACADAS ================= -->
+<div class="el-con" id="propiedades">
+  <div class="viel-root">
+
+    <div class="viel-header-main">
+      <div class="viel-title-group">
+        <h2>Propiedades Destacadas</h2>
+        <div class="viel-switch-box">
+          <button class="viel-switch-btn active" type="button">VENTA</button>
+          <button class="viel-switch-btn inactive" type="button">ARRIENDO</button>
+        </div>
+      </div>
+      <span class="viel-view-all">Ver catalogo completo <span class="mi">arrow_forward</span></span>
+    </div>
+
+    <div class="viel-grid">
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110611_g_uwlrn2ghkchsuglep8dn20260813011219.jpeg" alt="Sitio en Villarrica" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Sitio en Villarrica</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Villarrica</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 0</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 0</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 0m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">$135.000.000</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110609_g_felmoukgig3lwdynys2m20260812230344.jpg" alt="Casa en Peñalolén" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Casa en Peñalolén</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Peñalolén</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 5</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 3</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 132m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">UF 7.250,00</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110604_g_pdd9dblaswxaxs9eycqm20260812183613.jpg" alt="Departamento en Vitacura" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Departamento en Vitacura</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Vitacura</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 4</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 3</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 150m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">UF 10.900,00</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110603_g_lhtj0vcbggdjjlhvaesc20260812134848.jpeg" alt="Departamento en Ñuñoa" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Departamento en Ñuñoa</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Ñuñoa</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 3</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 3</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 94.75m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">UF 5.170,00</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110600_g_0gfynayodgpvubcwpuim20260812125138.jpg" alt="Casa en Concón" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Casa en Concón</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Concón</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 6</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 5</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 175m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">UF 14.200,00</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="viel-card">
+        <div class="viel-img-container">
+          <div class="viel-badge-new">Recien Agregado</div>
+          <img src="./assets/110599_g_taes0cnhykvs1bushnyi20260812132550.jpeg" alt="Departamento en Las Condes" loading="lazy">
+        </div>
+        <div class="viel-body">
+          <h3>Departamento en Las Condes</h3>
+          <div class="viel-loc"><span class="mi">location_on</span> Las Condes</div>
+          <div class="viel-specs">
+            <div class="viel-spec-item"><span class="mi">bed</span> 3</div>
+            <div class="viel-spec-item"><span class="mi">shower</span> 2</div>
+            <div class="viel-spec-item"><span class="mi">straighten</span> 100m2</div>
+          </div>
+          <div class="viel-card-footer">
+            <div class="viel-card-price">UF 9.600,00</div>
+            <button class="viel-circle-btn" type="button" aria-label="Ver propiedad"><span class="mi">chevron_right</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================= FOOTER =========================== -->
+<footer class="viel-footer">
+  <div class="viel-footer-container">
+
+    <div class="viel-footer-brand">
+      <div class="viel-logo-wrapper">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2L2 12L12 22L22 12L12 2Z" fill="#002c6e"></path>
+        </svg>
+        <span class="viel-company-name">Viel Propiedades</span>
+      </div>
+      <p class="viel-copyright">© 2024 Todos los derechos reservados.</p>
+    </div>
+
+    <div class="viel-footer-offices">
+      <div class="viel-offices-title">Oficinas</div>
+      <div class="viel-offices-grid">
+
+        <div class="viel-office-block">
+          <div class="viel-office-region">Región Metropolitana</div>
+          <div class="viel-office-row">
+            <div class="viel-office-col">
+              <div class="viel-office-label">Dirección</div>
+              <p class="viel-office-text">Juan de Valiente 3036, Vitacura</p>
+            </div>
+            <div class="viel-office-col">
+              <div class="viel-office-label">Contacto</div>
+              <p class="viel-office-text"><span class="viel-office-link">+56 9 9266 2422</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="viel-office-block">
+          <div class="viel-office-region">V Región</div>
+          <div class="viel-office-row">
+            <div class="viel-office-col">
+              <div class="viel-office-label">Dirección</div>
+              <p class="viel-office-text">Las Pelargonias 842, Of. 401, Concón</p>
+            </div>
+            <div class="viel-office-col">
+              <div class="viel-office-label">Contacto</div>
+              <p class="viel-office-text"><span class="viel-office-link">+56 9 9302 3458</span></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="viel-footer-links">
+      <a href="#propiedades">Propiedades</a>
+      <a href="#top">Privacidad</a>
+      <a href="#oficinas">Contacto</a>
+    </div>
+
+  </div>
+</footer>
+
+  <div data-ijv-demo-badge style="position:relative;z-index:1;padding:14px 16px 90px;text-align:center;font:400 12px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#94a3b8;background:#0f172a">
+    Demo preparada por <a href="https://ijvagency.com/" target="_blank" rel="noopener noreferrer" style="color:#cbd5e1;text-decoration:underline">IJV Agency</a> para Viel Propiedades — sitio de muestra, no es la web oficial.
+  </div>
+  <script>
+window["vielAgentConfig"] = Object.assign(window["vielAgentConfig"] || {}, { webhook: "https://meta.ijvagency.com/webhook/viel-demo-agent", leadsWebhook: "https://meta.ijvagency.com/webhook/viel-demo-leads" });
+/* ============================================================================
+ * VIEL PROPIEDADES — Widget de chat embebible (IJV Agency)
+ * ----------------------------------------------------------------------------
+ * Generado por IJV Factory — NO editar a mano: cambios van al factory.config.json
+ * y se regenera. Patrón canónico extraído de mmdent/widget/agent.js.
+ *
+ * Distribución recomendada vía jsDelivr (repo público):
+ *   https://cdn.jsdelivr.net/gh/nachojr2003/viel-site@main/widget/agent.js
+ *
+ * Uso en el sitio del cliente:
+ *   <script>
+ *     window.vielAgentConfig = { }; // overrides opcionales — los defaults van embebidos
+ *   <\/script>
+ *   <script src=".../widget/agent.js" defer><\/script>
+ *
+ * Sin dependencias externas. IIFE puro, vanilla JS (ES5).
+ * ============================================================================ */
+(function () {
+  'use strict';
+
+  /* ---------------- Config con DEFAULTS embebidos (regla #11: si el
+   * integrador pasa config parcial, NADA queda undefined) ---------------- */
+  var DEFAULTS = {
+    n8nBase:        "https://meta.ijvagency.com",
+    webhook:        null,
+    leadsWebhook:   null,
+    privacyUrl:     '/politica-privacidad',
+    logoUrl:        "https://viel-demo.vercel.app/assets/cropped-viel.cl-png-1.png",
+    primary:        '#002c6e',
+    secondary:      '#0d141b',
+    accent:         '#dbb84a',
+    fontFamily:     "Inter,system-ui,-apple-system,'Segoe UI',sans-serif,'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji'",
+    timeoutMs:      45000,   /* >= 30s: queries con RAG completo cortan a 15s (regla #10).
+                              * 45000 y no 40000: la espera real que ve el usuario es
+                              * timeoutMs × (1 + maxRetries), así que el knob que importa
+                              * es maxRetries. Un turno vivo nunca llega a 40s (RAG p99
+                              * ~10s + self-call del retry-on-empty ~5s, regla #84): entre
+                              * 40 y 45 solo cambia cuánto tarda en rendirse lo ya muerto. */
+    maxRetries:     1,
+    typewriter:     true,
+    typewriterCps:  90,
+    agentName:      "el asistente de Viel Propiedades",
+    clientName:     "Viel Propiedades",
+    /* Subtítulo del encabezado: dice a QUÉ ATIENDE el agente, nunca qué es. Una
+     * etiqueta de bot aquí lo delata antes de que escriba una palabra (regla
+     * #114). Se personaliza con `agente.subtitulo_widget` en el config. */
+    headerSubtitle: "Atención al cliente",
+
+
+    welcomeMessage: "Hola, soy el asistente de Viel Propiedades. Te atiendo a cualquier hora, todos los días.\n\nSomos una corredora familiar con más de 70 años de tradición y te acompañamos en:\n\n**Compra y venta** — casas, departamentos, oficinas, sitios y parcelas.\n**Arriendo** — con arrendatarios calificados y contratos gestionados.\n**Administración** — de tu propiedad, a través de VielPM.\n**Departamentos nuevos** — y proyectos, a través de Capital Q.\n\nTrabajamos en el sector oriente de Santiago, desde nuestra oficina en Vitacura, y en la costa de la V Región (Viña del Mar, Reñaca y Concón), desde nuestra oficina en Concón.\n\n¿Qué te trae hoy: comprar, arrendar, buscar un departamento nuevo, o vender o dar en administración tu propiedad?"
+  };
+  var CFG = window.vielAgentConfig = window.vielAgentConfig || {};
+  for (var k in DEFAULTS) { if (CFG[k] === undefined || CFG[k] === null) CFG[k] = DEFAULTS[k]; }
+  if (!CFG.webhook)      CFG.webhook      = CFG.n8nBase + '/webhook/viel-agent';
+  if (!CFG.leadsWebhook) CFG.leadsWebhook = CFG.n8nBase + '/webhook/viel-leads';
+
+  var QUICK_BUTTONS = [];
+
+  /* ---------------- Utilidades ---------------- */
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function parseMd(text) {
+    var s = escapeHtml(text);
+    s = s.replace(/```([\s\S]*?)```/g, function (_, c) { return '<pre>' + c + '</pre>'; });
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/(^|\s)(https?:\/\/[^\s<]+)/g,
+      '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    s = s.replace(/(^|\n)- (.+)/g, '$1<li>$2</li>');
+    s = s.replace(/(<li>[\s\S]*?<\/li>)(?!\s*<li>)/g, '<ul>$1</ul>');
+    /* Regla #27: strip de placeholders alucinados por el LLM.
+       Restringido a placeholders CONOCIDOS: un strip genérico \[[a-z_]+\]
+       borraba texto legítimo entre corchetes (ej. "[PDF]", "[borrador]"). */
+    s = s.replace(/\{\{[^}]+\}\}/g, '').replace(/\{first_name\}/gi, '')
+      .replace(/\[(nombre|name|first_name|usuario|user)\]/gi, '');
+    /* Segunda capa: MARCAS INTERNAS del sistema. El nodo Finalize del workflow ya
+       las strippea; esto es la red por si un turno las deja pasar — el usuario
+       jamás debe leer "[CONSENT_OK]" ni "[PENDIENTE CLIENTE: precio]".
+       Lista EXPLÍCITA a propósito: un \[[A-Z_]{3,}\] genérico borraría texto
+       legítimo del negocio ("[PDF]", "[IVA]", "[RUC]") — misma lección que el
+       strip de placeholders de arriba (regla #27). Marca nueva en un workflow
+       ⇒ agregarla también aquí. */
+    s = s.replace(/\[\/?(CONSENT_OK|CONSENT|HANDOFF|ESCALATED|ESCALAR|LEAD_OK|NO_KB|IMG:[^\]]*|PENDIENTE[^\]]*)\]/gi, '');
+    s = s.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
+    return '<p>' + s + '</p>';
+  }
+
+  /* ---------------- Fotos dentro del mensaje del agente ----------------
+   * Contrato (genérico, sirve para cualquier cliente que mande imágenes): si una
+   * línea del mensaje contiene SOLO una URL de imagen, esa línea se pinta como
+   * <img> y el resto del texto fluye normal. Cualquier otra URL sigue siendo un
+   * enlace de texto, como siempre.
+   *
+   * Se eligió URL cruda y no un marcador propio a propósito: si algo falla, el
+   * peor caso es que se vea una URL (feo pero funcional); un marcador roto se
+   * leería como basura. Y el `finalize` de los workflows no lo strippearía.
+   *
+   * Seguridad: SOLO https + extensión de imagen conocida. La regex no admite
+   * espacios, comillas ni `<`/`>`, así que no hay forma de colar `javascript:`,
+   * `data:` ni un atributo extra; además la URL se asigna por PROPIEDAD
+   * (img.src = …), nunca concatenada dentro de innerHTML. */
+  var RE_FOTO     = /^https:\/\/[^\s<>"']+\.(?:webp|jpe?g|png)(?:\?[^\s<>"']*)?$/i;
+  var RE_HAY_FOTO = /^[ \t]*https:\/\/[^\s<>"']+\.(?:webp|jpe?g|png)(?:\?[^\s<>"']*)?[ \t\r]*$/im;
+
+  function splitFotos(text) {
+    var out = [], buf = [];
+    function cierra() {
+      var t = buf.join('\n').replace(/^\n+/, '').replace(/\n+$/, '');
+      if (t.replace(/\s/g, '')) out.push({ tipo: 'texto', texto: t });
+      buf = [];
+    }
+    String(text == null ? '' : text).split('\n').forEach(function (l) {
+      var s = l.trim();
+      if (RE_FOTO.test(s)) { cierra(); out.push({ tipo: 'foto', url: s }); }
+      else buf.push(l);
+    });
+    cierra();
+    return out;
+  }
+  /* Texto sin las líneas de foto. Si no hay fotos devuelve el original TAL CUAL
+   * (idéntico byte a byte): así el camino de siempre no cambia en nada. */
+  function sinFotos(text) {
+    var s = String(text == null ? '' : text);
+    if (!RE_HAY_FOTO.test(s)) return s;
+    var out = [], bl = splitFotos(s);
+    for (var i = 0; i < bl.length; i++) if (bl[i].tipo === 'texto') out.push(bl[i].texto);
+    return out.join('\n\n');
+  }
+  /* alt descriptivo desde el nombre del archivo: ".../dormitorio-1.webp" -> "Foto: dormitorio 1" */
+  function altFoto(url) {
+    var n = url.split('?')[0].split('/').pop().replace(/\.[a-z]+$/i, '').replace(/[-_]+/g, ' ').trim();
+    return n ? ('Foto: ' + n) : 'Foto';
+  }
+  /* Regla #95: si la foto 404ea se oculta — jamás el ícono de imagen rota.
+   * Regla #19: el re-scroll al onload queda como red. Con el 4/3 reservado el
+   * alto ya es el final y no hace falta, pero si la foto real NO es 4:3 el alto
+   * cambia al cargar — ahí sí hay que volver a bajar (scrollToBottom trae el rAF
+   * que Safari/iOS necesita). */
+  function prepFoto(img) {
+    /* setProperty con prioridad `important` y no `style.display='none'` a secas:
+     * la regla .ijv-msg img.ijv-foto necesita `display:block!important` para
+     * ganarle al CSS anti-emoji (regla #15), y un display inline SIN important
+     * pierde contra ella — la foto rota quedaba visible. Verificado en vivo. */
+    var falla = function () {
+      if (img.style.setProperty) img.style.setProperty('display', 'none', 'important');
+      else img.style.display = 'none';
+    };
+    img.onerror = falla;
+    img.onload  = function () { scrollToBottom(); };
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) falla();
+  }
+  /* Pinta el cuerpo de una burbuja del bot. Sin fotos ⇒ exactamente lo de antes. */
+  function renderBot(div, text) {
+    var s = String(text == null ? '' : text);
+    if (!RE_HAY_FOTO.test(s)) { div.innerHTML = parseMd(s); return; }
+    div.innerHTML = '';
+    if (div.className.indexOf('ijv-con-foto') < 0) div.className += ' ijv-con-foto';
+    var bl = splitFotos(s);
+    for (var i = 0; i < bl.length; i++) {
+      if (bl[i].tipo === 'foto') {
+        var img = document.createElement('img');
+        img.className = 'ijv-foto';
+        /* EAGER a propósito: `lazy` es para galerías largas fuera de pantalla.
+         * Aquí la foto entra al viewport en el mismo instante en que se pinta el
+         * mensaje, así que lazy solo agregaba latencia y dejaba un hueco blanco
+         * que se llenaba un segundo después. Son 1-2 fotos por mensaje. */
+        img.setAttribute('loading', 'eager');
+        img.setAttribute('fetchpriority', 'high');
+        img.setAttribute('decoding', 'async');
+        img.alt = altFoto(bl[i].url);
+        prepFoto(img);          /* handlers ANTES del src: un 404 instantáneo no se pierde */
+        img.src = bl[i].url;
+        div.appendChild(img);
+      } else {
+        /* Se desenvuelve el <p> del parseMd para que quede como hijo directo de
+         * .ijv-msg y le sigan aplicando los mismos estilos de siempre. */
+        var wrap = document.createElement('div');
+        wrap.innerHTML = parseMd(bl[i].texto);
+        while (wrap.firstChild) div.appendChild(wrap.firstChild);
+      }
+    }
+  }
+
+  function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  /* Regla #61: TTL de inactividad — Cmd+Shift+R NO limpia sessionStorage; sin
+   * TTL la Simple Memory del agente arrastra la conversación vieja. */
+  var SESSION_TTL_MS = 30 * 60 * 1000;
+  var SS_PREFIX = 'viel_';
+  function getSessionId() {
+    var s = sessionStorage.getItem(SS_PREFIX + 'session_id');
+    var last = parseInt(sessionStorage.getItem(SS_PREFIX + 'session_last') || '0', 10);
+    var now = Date.now();
+    if (!s || (last && (now - last) > SESSION_TTL_MS)) {
+      s = uuid();
+      sessionStorage.setItem(SS_PREFIX + 'session_id', s);
+      sessionStorage.removeItem(SS_PREFIX + 'messages');
+    }
+    sessionStorage.setItem(SS_PREFIX + 'session_last', String(now));
+    return s;
+  }
+  function resetSession() {
+    sessionStorage.removeItem(SS_PREFIX + 'session_id');
+    sessionStorage.removeItem(SS_PREFIX + 'session_last');
+    sessionStorage.removeItem(SS_PREFIX + 'messages');
+    return getSessionId();
+  }
+
+  /* Persistencia de mensajes: sobreviven al refresh, no al cerrar la pestaña */
+  function loadMessages() {
+    try { return JSON.parse(sessionStorage.getItem(SS_PREFIX + 'messages') || '[]'); }
+    catch (e) { return []; }
+  }
+  function saveMessage(role, text) {
+    try {
+      var m = loadMessages();
+      m.push({ role: role, text: text });
+      if (m.length > 60) m = m.slice(-60);
+      sessionStorage.setItem(SS_PREFIX + 'messages', JSON.stringify(m));
+    } catch (e) { /* quota: silencioso */ }
+  }
+
+  /* ---------------- CSS inyectado ----------------
+   * Regla #15: CSS defensivo para <img> (librerías emoji del sitio convierten
+   * unicode a <img>; sin esto un 👋 sale de 600px) + fuentes emoji en la pila. */
+  var CSS = [
+    /* --ijv-text es FIJO a proposito (regla de Nacho): las letras de los mensajes
+     * del agente van SIEMPRE en negro, nunca en un color de marca. El secundario
+     * queda solo para usos decorativos (gradiente del cal, toast). */
+    ':root{--ijv-primary:' + CFG.primary + ';--ijv-secondary:' + CFG.secondary + ';--ijv-accent:' + CFG.accent + ';--ijv-text:#111111;}',
+    '.ijv-launcher{position:fixed;bottom:22px;right:22px;height:60px;padding:0 22px;border-radius:30px;background:#fff;color:var(--ijv-primary);border:0;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;z-index:2147483000;transition:transform .2s ease}',
+    '.ijv-launcher:hover{transform:scale(1.05)}',
+    /* Los logos (launcher y encabezado) blindados igual que las fotos: es la
+     * MISMA familia de bug que la regla #15 — un `img{width:100%!important}`
+     * global del sitio del cliente le ganaba al `width:auto` de aquí y
+     * deformaba el logo (el del encabezado se comía media ventana del chat).
+     * Verificado en vivo con un sitio anfitrión hostil. */
+    '.ijv-launcher img{height:36px!important;width:auto!important;max-width:none!important;display:block!important;object-fit:contain}',
+    '.ijv-root *,.ijv-root *::before,.ijv-root *::after{box-sizing:border-box}',
+    '.ijv-root{position:fixed;bottom:100px;right:22px;width:380px;max-width:calc(100vw - 24px);height:600px;max-height:calc(100vh - 120px);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;z-index:2147483000;font-family:' + CFG.fontFamily + ';color:var(--ijv-text);transform:translateY(20px);opacity:0;pointer-events:none;transition:transform .25s ease,opacity .2s ease}',
+    '.ijv-root.ijv-open{transform:translateY(0);opacity:1;pointer-events:auto}',
+    '.ijv-head{background:var(--ijv-primary);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}',
+    '.ijv-head img{height:44px!important;width:auto!important;max-width:none!important;background:#fff;border-radius:10px;padding:6px 10px;flex-shrink:0;display:block!important}',
+    '.ijv-head .ijv-title{font-weight:700;font-size:15px;line-height:1.2}',
+    '.ijv-head .ijv-sub{font-size:12px;opacity:.85}',
+    '.ijv-head .ijv-actions{margin-left:auto;display:flex;gap:6px}',
+    '.ijv-head button{background:rgba(255,255,255,.15);border:0;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}',
+    '.ijv-head button:hover{background:rgba(255,255,255,.28)}',
+    '.ijv-msgs{flex:1;overflow-y:auto;padding:16px;background:#FAFAFA;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}',
+    '.ijv-msg{max-width:84%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.45;word-wrap:break-word}',
+    '.ijv-msg p{margin:0 0 6px}.ijv-msg p:last-child{margin:0}',
+    '.ijv-msg ul{margin:4px 0 4px 18px;padding:0}.ijv-msg li{margin:2px 0}',
+    '.ijv-msg a{color:var(--ijv-primary);text-decoration:underline}',
+    '.ijv-msg code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px;font-size:13px}',
+    '.ijv-msg img{max-width:1.2em!important;max-height:1.2em!important;display:inline-block!important;vertical-align:text-bottom!important}',
+    /* Fotos que manda el agente. La regla de arriba aplasta CUALQUIER <img> a
+     * 1.2em para defenderse de las librerías de emoji del sitio (regla #15);
+     * esta gana por especificidad y solo alcanza a las fotos que pinta el
+     * widget. Los !important son contra un `img{width:100%!important}` global
+     * del sitio del cliente, que si no deforma la foto. */
+    /* `aspect-ratio:auto 4/3` reserva el hueco con el alto FINAL desde el primer
+     * frame: mientras la imagen no tiene proporción natural (o sea, mientras
+     * carga) vale el 4/3; apenas llega manda la proporción real de la imagen, así
+     * que una foto vertical o panorámica se ve bien igual. Sin esto la burbuja
+     * crecía de golpe al cargar y empujaba el texto. */
+    '.ijv-msg img.ijv-foto{display:block!important;width:100%!important;max-width:100%!important;max-height:none!important;height:auto!important;aspect-ratio:auto 4 / 3;vertical-align:baseline!important;border-radius:10px;margin:6px 0;background:rgba(0,0,0,.05)}',
+    '.ijv-msg img.ijv-foto:first-child{margin-top:0}',
+    '.ijv-msg img.ijv-foto:last-child{margin-bottom:0}',
+    '.ijv-msg.ijv-con-foto{max-width:92%}',
+    '.ijv-bot{align-self:flex-start;background:#fff;border:1px solid #E8E8E8;border-top-left-radius:4px;color:var(--ijv-text)}',
+    '.ijv-user{align-self:flex-end;background:var(--ijv-primary);color:#fff;border-top-right-radius:4px}',
+    '.ijv-user a{color:#fff}',
+    '.ijv-typing{align-self:flex-start;display:flex;gap:4px;padding:10px 14px;background:#fff;border:1px solid #E8E8E8;border-radius:14px;border-top-left-radius:4px}',
+    '.ijv-typing span{width:7px;height:7px;background:var(--ijv-primary);border-radius:50%;opacity:.4;animation:ijvBlink 1.2s infinite}',
+    '.ijv-typing span:nth-child(2){animation-delay:.2s}.ijv-typing span:nth-child(3){animation-delay:.4s}',
+    '@keyframes ijvBlink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}',
+    '.ijv-cta{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 6px}',
+    '.ijv-pill{background:var(--ijv-accent);color:var(--ijv-primary);border:1px solid rgba(0,0,0,.08);padding:6px 12px;border-radius:999px;font-size:12.5px;cursor:pointer;font-weight:600;transition:all .15s;font-family:inherit}',
+    '.ijv-pill:hover{background:var(--ijv-primary);color:#fff;border-color:var(--ijv-primary)}',
+    '.ijv-form{background:#fff;border:1px solid #E8E8E8;border-radius:12px;padding:14px;margin:8px 0;display:flex;flex-direction:column;gap:8px;align-self:stretch}',
+    '.ijv-form h4{margin:0 0 4px;font-size:14px;color:var(--ijv-text)}',
+    '.ijv-form input,.ijv-form textarea{width:100%;padding:9px 11px;border:1px solid #D8D8D8;border-radius:8px;font-size:13.5px;font-family:inherit;color:var(--ijv-text);background:#fff}',
+    '.ijv-form input:focus,.ijv-form textarea:focus{outline:none;border-color:var(--ijv-primary)}',
+    '.ijv-form button{background:var(--ijv-primary);color:#fff;border:0;padding:10px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13.5px;font-family:inherit}',
+    '.ijv-form button:disabled{opacity:.6;cursor:wait}',
+    '.ijv-form .ijv-hp{display:none!important}',
+    '.ijv-form .ijv-legal{margin:0;font-size:10.5px;line-height:1.45;color:#8a8a8a}',
+    '.ijv-form .ijv-legal a{color:var(--ijv-primary);text-decoration:underline}',
+    '.ijv-cal{background:linear-gradient(135deg,var(--ijv-primary),var(--ijv-secondary));border-radius:12px;padding:16px;margin:8px 0;align-self:stretch;color:#fff}',
+    '.ijv-cal p{margin:0 0 10px;font-size:13.5px;line-height:1.45}',
+    '.ijv-cal a{display:inline-block;background:#fff;color:var(--ijv-primary);font-weight:700;padding:9px 16px;border-radius:8px;text-decoration:none;font-size:13.5px}',
+    '.ijv-input{display:flex;gap:8px;padding:12px;border-top:1px solid #E8E8E8;background:#fff;align-items:flex-end}',
+    '.ijv-input textarea{flex:1;border:1px solid #D8D8D8;border-radius:12px;padding:10px 12px;font-family:inherit;font-size:14px;resize:none;max-height:100px;min-height:40px;color:var(--ijv-text)}',
+    '.ijv-input textarea:focus{outline:none;border-color:var(--ijv-primary)}',
+    '.ijv-input button{background:var(--ijv-primary);color:#fff;border:0;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}',
+    '.ijv-input button:disabled{opacity:.5;cursor:not-allowed}',
+    '.ijv-input button svg{width:18px;height:18px;fill:#fff}',
+    '.ijv-foot{padding:8px 12px 10px;background:#fff;border-top:1px solid #E8E8E8;text-align:center;font-size:10.5px;color:#8a8a8a;line-height:1.5}',
+    '.ijv-foot a{color:var(--ijv-primary);text-decoration:none;font-weight:600}',
+    '.ijv-foot a:hover{text-decoration:underline}',
+    '.ijv-foot .ijv-foot-powered{display:block;margin-top:3px;font-size:10px;color:#9a9a9a}',
+    '.ijv-foot .ijv-foot-powered a{color:#9a9a9a;font-weight:500}',
+    '.ijv-toast{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:var(--ijv-secondary);color:#fff;padding:8px 14px;border-radius:8px;font-size:12.5px;opacity:0;transition:opacity .2s;pointer-events:none}',
+    '.ijv-toast.ijv-show{opacity:.95}',
+    '@media (max-width:480px){.ijv-root{width:calc(100vw - 16px);height:calc(100vh - 90px);bottom:80px;right:8px}.ijv-launcher{bottom:16px;right:16px;height:54px;padding:0 18px}.ijv-launcher img{height:32px!important}}'
+  ].join('');
+
+  /* ---------------- Render de la UI ---------------- */
+  var styleEl = document.createElement('style');
+  styleEl.textContent = CSS;
+  document.head.appendChild(styleEl);
+
+  var launcher = document.createElement('button');
+  launcher.className = 'ijv-launcher';
+  launcher.setAttribute('aria-label', 'Abrir chat ' + CFG.clientName);
+  launcher.innerHTML = '<img src="' + escapeHtml(CFG.logoUrl) + '" alt="' + escapeHtml(CFG.clientName) + '" />';
+  document.body.appendChild(launcher);
+
+  var root = document.createElement('div');
+  root.className = 'ijv-root';
+  root.setAttribute('role', 'dialog');
+  root.setAttribute('aria-label', 'Chat de ' + CFG.clientName);
+  root.innerHTML =
+    '<div class="ijv-head">' +
+      '<img src="' + escapeHtml(CFG.logoUrl) + '" alt="' + escapeHtml(CFG.clientName) + '" />' +
+      '<div>' +
+        '<div class="ijv-title">' + escapeHtml(CFG.clientName) + '</div>' +
+        '<div class="ijv-sub">' + escapeHtml(CFG.agentName) + ' · ' + escapeHtml(CFG.headerSubtitle) + '</div>' +
+      '</div>' +
+      '<div class="ijv-actions">' +
+        '<button type="button" class="ijv-reset" aria-label="Reiniciar conversación" title="Nueva conversación">⟳</button>' +
+        '<button type="button" class="ijv-close" aria-label="Cerrar chat" title="Cerrar">✕</button>' +
+      '</div>' +
+      '<div class="ijv-toast">Conversación reiniciada</div>' +
+    '</div>' +
+    '<div class="ijv-msgs" aria-live="polite" aria-atomic="false"></div>' +
+    '<div class="ijv-input">' +
+      '<textarea rows="1" maxlength="2000" placeholder="Escribe tu mensaje…" aria-label="Escribe tu mensaje"></textarea>' +
+      '<button type="button" class="ijv-send" aria-label="Enviar">' +
+        '<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>' +
+      '</button>' +
+    '</div>' +
+    '<div class="ijv-foot">' +
+      'Al usar este chat aceptas la <a href="' + escapeHtml(CFG.privacyUrl) + '" target="_blank" rel="noopener">política de privacidad</a> de ' + escapeHtml(CFG.clientName) + '.' +
+      '<span class="ijv-foot-powered"><a href="https://ijvagency.com/" target="_blank" rel="noopener">Powered by IJV</a></span>' +
+    '</div>';
+  document.body.appendChild(root);
+
+  /* Logo con fallback: si la URL del logo falla (típico en demos con dominio
+   * ficticio, o si el sitio del cliente mueve el archivo), el launcher cae a un
+   * ícono de chat y el header oculta la imagen rota — nunca se ve un img roto. */
+  var CHAT_ICON = '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M12 3C6.48 3 2 6.94 2 11.5c0 2.3 1.13 4.38 2.97 5.88L4 21l4.02-1.6c1.2.38 2.5.6 3.98.6 5.52 0 10-3.94 10-8.5S17.52 3 12 3z"/></svg>';
+  var lImg = launcher.querySelector('img');
+  if (lImg) {
+    var lFallback = function () { launcher.innerHTML = CHAT_ICON; };
+    lImg.onerror = lFallback;
+    if (lImg.complete && lImg.naturalWidth === 0) lFallback();
+  }
+  var hImg = root.querySelector('.ijv-head img');
+  if (hImg) {
+    var hFallback = function () { hImg.style.display = 'none'; };
+    hImg.onerror = hFallback;
+    if (hImg.complete && hImg.naturalWidth === 0) hFallback();
+  }
+
+  var $msgs  = root.querySelector('.ijv-msgs');
+  var $input = root.querySelector('textarea');
+  var $send  = root.querySelector('.ijv-send');
+  var $close = root.querySelector('.ijv-close');
+  var $reset = root.querySelector('.ijv-reset');
+  var $toast = root.querySelector('.ijv-toast');
+
+  var isOpen = false;
+  var isBusy = false;
+  var welcomed = false;
+
+  /* Regla #19: rAF obligatorio — sin él Safari/iOS deja el scroll anclado
+   * arriba mientras el bot escribe. */
+  function scrollToBottom() {
+    $msgs.scrollTop = $msgs.scrollHeight;
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(function () { $msgs.scrollTop = $msgs.scrollHeight; });
+    }
+  }
+  function showToast(t) {
+    $toast.textContent = t;
+    $toast.classList.add('ijv-show');
+    setTimeout(function () { $toast.classList.remove('ijv-show'); }, 1800);
+  }
+  function pushUser(text, opts) {
+    var div = document.createElement('div');
+    div.className = 'ijv-msg ijv-user';
+    div.textContent = text;
+    $msgs.appendChild(div);
+    scrollToBottom();
+    if (!opts || !opts.skipSave) saveMessage('user', text);
+  }
+  function pushBot(text, opts) {
+    opts = opts || {};
+    var div = document.createElement('div');
+    div.className = 'ijv-msg ijv-bot';
+    $msgs.appendChild(div);
+    if (!opts.skipSave) saveMessage('bot', text);
+    if (CFG.typewriter && !opts.instant) {
+      typewrite(div, text);
+    } else {
+      renderBot(div, text);
+      scrollToBottom();
+    }
+    return div;
+  }
+  /* Typewriter: re-parsea markdown en cada step y scrollea con rAF (regla #19).
+   * Las líneas de foto NO se tipean: se tipea solo la prosa (sinFotos) y las
+   * imágenes aparecen enteras al cerrar el mensaje. Si se tipearan, cada step
+   * recrearía el <img> (innerHTML se reemplaza completo 30 veces por segundo)
+   * y eso son decenas de descargas y parpadeo; además el usuario vería la URL
+   * cruda letra por letra. Sin fotos, sinFotos() devuelve el texto intacto y
+   * esto se comporta exactamente como siempre. */
+  function typewrite(div, fullText) {
+    var typed = sinFotos(fullText);
+    var i = 0;
+    var step = Math.max(1, Math.round(CFG.typewriterCps / 30));
+    var timer = setInterval(function () {
+      i += step;
+      if (i >= typed.length) {
+        clearInterval(timer);
+        renderBot(div, fullText);
+        scrollToBottom();
+        return;
+      }
+      div.innerHTML = parseMd(typed.slice(0, i));
+      scrollToBottom();
+    }, 33);
+  }
+  function pushCTA(buttons) {
+    var row = document.createElement('div');
+    row.className = 'ijv-cta';
+    buttons.forEach(function (b) {
+      var p = document.createElement('button');
+      p.type = 'button';
+      p.className = 'ijv-pill';
+      p.textContent = b.label;
+      p.addEventListener('click', b.onClick);
+      row.appendChild(p);
+    });
+    $msgs.appendChild(row);
+    scrollToBottom();
+    return row;
+  }
+  function showTyping() {
+    var t = document.createElement('div');
+    t.className = 'ijv-typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    $msgs.appendChild(t);
+    scrollToBottom();
+    return t;
+  }
+  function removeEl(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
+
+  /* ---------------- Call al webhook del agente ---------------- */
+  function callAgent(message, attempt) {
+    attempt = attempt || 0;
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, CFG.timeoutMs);
+    return fetch(CFG.webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: message,
+        sessionId: getSessionId(),
+        origin: window.location.origin,
+        channel: 'web'
+      }),
+      signal: ctrl.signal
+    })
+    .then(function (r) {
+      clearTimeout(timer);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .catch(function (err) {
+      clearTimeout(timer);
+      if (attempt < CFG.maxRetries) return callAgent(message, attempt + 1);
+      throw err;
+    });
+  }
+
+  /* ---------------- Lead form (honeypot anti-bot) ---------------- */
+  function showLeadForm(prefill) {
+    if ($msgs.querySelector('.ijv-form')) { scrollToBottom(); return; }
+    prefill = prefill || {};
+    var form = document.createElement('form');
+    form.className = 'ijv-form';
+    form.innerHTML =
+      '<h4>Déjanos tus datos y te contactamos</h4>' +
+      '<input type="text" name="nombre" placeholder="Nombre completo *" required value="' + escapeHtml(prefill.nombre || '') + '">' +
+      '<input type="email" name="email" placeholder="Correo electrónico *" required value="' + escapeHtml(prefill.email || '') + '">' +
+      '<input type="tel" name="telefono" placeholder="Teléfono / WhatsApp (opcional)" value="' + escapeHtml(prefill.telefono || '') + '">' +
+      '<textarea name="consulta" rows="2" placeholder="Cuéntanos brevemente (opcional)"></textarea>' +
+      '<input type="text" name="hp" class="ijv-hp" tabindex="-1" autocomplete="off">' +
+      /* Línea legal del formulario: el footer del chat enlaza la política, pero el
+       * formulario es donde el usuario ENTREGA sus datos — ahí tiene que estar el
+       * enlace (regla #14, misma lógica) y el recordatorio de qué NO mandar por
+       * este medio. La segunda frase se ajusta al vertical: un prestador de salud
+       * (legal.datos_salud) pide explícitamente no enviar estudios clínicos. */
+      '<p class="ijv-legal">Al enviar aceptas el tratamiento de tus datos conforme al ' +
+        '<a href="' + escapeHtml(CFG.privacyUrl) + '" target="_blank" rel="noopener">aviso de privacidad</a>. ' +
+        'No compartas por este medio información sensible ni documentos personales.</p>' +
+      '<button type="submit">Enviar</button>';
+    $msgs.appendChild(form);
+    scrollToBottom();
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Enviando…';
+      var fd = new FormData(form);
+      fetch(CFG.leadsWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: fd.get('nombre'),
+          email: fd.get('email'),
+          telefono: fd.get('telefono'),
+          consulta: fd.get('consulta'),
+          hp: fd.get('hp'),
+          session_id: getSessionId(),
+          origin: window.location.origin
+        })
+      })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r; })
+      .then(function () {
+        removeEl(form);
+        pushBot('¡Listo! Recibimos tus datos. El equipo de ' + CFG.clientName + ' te contacta muy pronto.', { instant: true });
+        afterLeadCTA();
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.textContent = 'Reintentar';
+        pushBot('Hubo un problema al enviar. Por favor intenta de nuevo.', { instant: true });
+      });
+    });
+  }
+
+  /* Regla #20: el usuario que dejó datos está CALIENTE — no cerrar con
+   * "te escribimos pronto" seco: CTA inmediato a Calendly / WhatsApp. */
+  function afterLeadCTA() {
+
+
+  }
+
+  /* ---------------- Intent helpers ---------------- */
+
+  function wantsContactForm(text) {
+    return /\b(lead|llama(me|r)|mis datos|dejo mis datos|d[ée]jame datos|quiero que me contacten)\b/i.test(text || '');
+  }
+
+  /* ---------------- Envío de mensajes ---------------- */
+  function send(text) {
+    text = (text || '').trim();
+    if (!text || isBusy) return;
+    pushUser(text);
+    $input.value = '';
+    autoSize();
+    isBusy = true;
+    $send.disabled = true;
+
+    var typing = showTyping();
+
+    callAgent(text)
+      .then(function (data) {
+        removeEl(typing);
+        var reply = (data && (data.output || data.response || data.text)) || 'Disculpa, no pude procesar tu mensaje. ¿Puedes reformularlo?';
+        pushBot(reply);
+
+        var showsForm = (data && (data.lead_intent || data.showForm)) || wantsContactForm(text);
+        var wantsContactBtn = /\b(equipo|contactar|asesor|coordinar)\b/i.test(reply);
+        var ctas = [];
+
+        /* Regla #18: botón persistente, NUNCA auto-open que tape la respuesta */
+        if (wantsContactBtn && !showsForm) {
+          ctas.push({ label: 'Contactar al equipo', onClick: function () { showLeadForm({ nombre: data && data.nombre, email: data && data.email, telefono: data && data.telefono }); } });
+        }
+        if (ctas.length) pushCTA(ctas);
+        if (showsForm) showLeadForm({ nombre: data && data.nombre, email: data && data.email, telefono: data && data.telefono });
+      })
+      .catch(function () {
+        removeEl(typing);
+        pushBot('Ups, tuve un problema de conexión. ¿Puedes intentarlo de nuevo?', { instant: true });
+
+      })
+      .then(function () {
+        isBusy = false;
+        $send.disabled = false;
+        $input.focus();
+      });
+  }
+
+  /* ---------------- Auto-resize textarea ---------------- */
+  function autoSize() {
+    $input.style.height = 'auto';
+    $input.style.height = Math.min($input.scrollHeight, 100) + 'px';
+  }
+  $input.addEventListener('input', autoSize);
+  $input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send($input.value);
+    }
+  });
+  $send.addEventListener('click', function () { send($input.value); });
+
+  /* ---------------- Welcome + quick buttons ---------------- */
+  function showWelcome() {
+    /* El welcome NO pasa por send(): jamás dispara detección de lead (regla #18) */
+    pushBot(CFG.welcomeMessage, { instant: true, skipSave: true });
+    if (QUICK_BUTTONS.length) {
+      pushCTA(QUICK_BUTTONS.map(function (b) {
+        return { label: b.label, onClick: function () { send(b.mensaje); } };
+      }));
+    }
+  }
+  function restoreHistory() {
+    var hist = loadMessages();
+    if (!hist.length) return false;
+    hist.forEach(function (m) {
+      if (m.role === 'user') pushUser(m.text, { skipSave: true });
+      else pushBot(m.text, { instant: true, skipSave: true });
+    });
+    return true;
+  }
+
+  /* ---------------- Open / close / reset ---------------- */
+  function openChat() {
+    isOpen = true;
+    root.classList.add('ijv-open');
+    launcher.style.display = 'none';
+    if (!welcomed) {
+      welcomed = true;
+      getSessionId(); /* aplica TTL antes de restaurar */
+      if (!restoreHistory()) showWelcome();
+    }
+    setTimeout(function () { $input.focus(); }, 200);
+  }
+  function closeChat() {
+    isOpen = false;
+    root.classList.remove('ijv-open');
+    launcher.style.display = 'flex';
+  }
+  launcher.addEventListener('click', openChat);
+  $close.addEventListener('click', closeChat);
+  $reset.addEventListener('click', function () {
+    resetSession();
+    $msgs.innerHTML = '';
+    showToast('Conversación reiniciada');
+    setTimeout(showWelcome, 250);
+  });
+
+  /* ---------------- API pública opcional ---------------- */
+  window.vielAgent = {
+    open:  openChat,
+    close: closeChat,
+    reset: function () { $reset.click(); },
+    send:  send
+  };
+})();
+
+  </script>
+</body>
+</html>

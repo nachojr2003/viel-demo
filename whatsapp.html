@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>WhatsApp — Viel Propiedades · simulador de la demo</title>
+<link rel="icon" href="./assets/cropped-viel.cl-png-1-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Simulador de WhatsApp de la demo Viel.
+   Autocontenido: HTML + CSS + JS vanilla, sin frameworks ni CDNs de script.
+   El grueso del negocio de Viel entra por WhatsApp desde portales, así que la
+   demo tiene que verse como WhatsApp y no como un widget web.
+
+   Perspectiva: esta pantalla es el TELÉFONO DEL CLIENTE conversando con
+   "Viel Propiedades". Por eso, en el contrato del backend:
+     dir:"in"  = el cliente escribe hacia Viel  -> burbuja VERDE a la derecha
+     dir:"out" = Viel/el agente responde        -> burbuja BLANCA a la izquierda
+   ========================================================================== */
+
+:root{
+  --marca:#002c6e;         /* primario Viel */
+  --acento:#dbb84a;        /* acento Viel */
+  --tinta:#111111;         /* regla 127: el texto de los mensajes SIEMPRE negro */
+  --gris:#4a4a4a;
+  --gris-cl:#7a7a7a;
+  --linea:#e2e2e4;
+  --papel:#ffffff;
+  --hueso:#f3f3f4;
+  /* Paleta WhatsApp */
+  --wa-verde:#00a884;
+  --wa-header:#075e54;
+  --wa-fondo:#efeae2;
+  --wa-out:#d9fdd3;        /* burbuja del cliente (saliente desde este teléfono) */
+  --wa-in:#ffffff;         /* burbuja de Viel */
+  --wa-meta:#667781;
+  --wa-tick:#53bdeb;
+  --sans:'Inter','Helvetica Neue',Helvetica,Arial,system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--hueso);color:var(--tinta);
+  font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  min-height:100dvh;display:flex;flex-direction:column;
+}
+img{max-width:100%;height:auto;display:block}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none !important}
+a{color:var(--marca)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:3px solid var(--acento);outline-offset:2px
+}
+
+/* ---------- aviso de demo + barra de marca ---------- */
+.aviso{background:var(--tinta);color:rgba(255,255,255,.8);padding:7px 16px;
+  font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-align:center}
+.aviso b{color:#fff}
+
+.top{background:var(--papel);border-bottom:1px solid var(--linea)}
+.top-in{max-width:1320px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:10px;min-width:0}
+.marca img{width:34px;height:34px;object-fit:contain;flex:none}
+.marca b{display:block;font-size:14px;font-weight:700;line-height:1.15}
+.marca small{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gris-cl);font-weight:700;margin-top:3px}
+.top-sp{flex:1}
+.lnk{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:8px;
+  border:1px solid var(--linea);background:var(--papel);color:var(--marca);
+  font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
+.lnk:hover{background:#f7f9fc;border-color:#c9d6e6}
+.lnk.solid{background:var(--marca);color:#fff;border-color:var(--marca)}
+.lnk.solid:hover{background:#00214f}
+
+/* ---------- layout ---------- */
+.wrap{flex:1;width:100%;max-width:1320px;margin:0 auto;padding:16px;
+  display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-content:start}
+@media (min-width:1040px){
+  /* La columna de controles se desplaza sola: así el teléfono nunca se sale de
+     la pantalla compartida por culpa de un panel largo. */
+  .wrap{grid-template-columns:352px minmax(0,1fr);align-items:start}
+  .ctrl{position:sticky;top:16px;max-height:calc(100dvh - 190px);overflow:auto;overscroll-behavior:contain}
+}
+
+/* ---------- panel de controles ---------- */
+.ctrl{background:var(--papel);border:1px solid var(--linea);border-radius:14px;overflow:hidden}
+.ctrl>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gris-cl)}
+.ctrl>summary::-webkit-details-marker{display:none}
+.ctrl>summary::before{content:"";width:24px;height:3px;border-radius:2px;background:var(--marca);flex:none}
+.ctrl>summary::after{content:"▾";margin-left:auto;font-size:14px;color:var(--gris-cl);transition:transform .2s}
+.ctrl[open]>summary::after{transform:rotate(180deg)}
+.ctrl-body{padding:0 16px 16px}
+@media (min-width:1040px){
+  .ctrl>summary{cursor:default}
+  .ctrl>summary::after{display:none}
+}
+.grp{padding:15px 0;border-top:1px solid var(--linea)}
+.grp:first-child{border-top:0;padding-top:2px}
+.grp h3{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gris-cl)}
+.grp .hint{margin-top:6px;font-size:12px;color:var(--gris-cl);line-height:1.45}
+.fld{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.fld>*{min-width:0}
+input[type=text],input[type=tel],input[type=datetime-local],select{
+  flex:1 1 150px;padding:9px 11px;border:1px solid var(--linea);border-radius:8px;
+  background:var(--papel);font-size:13.5px;-webkit-appearance:none;appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,#7a7a7a 50%),linear-gradient(135deg,#7a7a7a 50%,transparent 50%);
+  background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;padding-right:30px}
+.btn-s{padding:9px 13px;border:1px solid var(--linea);border-radius:8px;background:var(--hueso);
+  font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-s:hover{background:#e9e9ec}
+.btn-s.pri{background:var(--marca);border-color:var(--marca);color:#fff}
+.btn-s.pri:hover{background:#00214f}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+
+.dato{margin-top:9px;display:flex;align-items:baseline;gap:8px;justify-content:space-between;
+  font-size:12.5px;color:var(--gris);border-top:1px dashed var(--linea);padding-top:9px}
+.dato:first-of-type{border-top:0}
+.dato span{color:var(--gris-cl);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.dato b{font-weight:700;color:var(--tinta);text-align:right}
+
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
+  font-size:11px;font-weight:700;letter-spacing:.04em;background:var(--hueso);color:var(--gris)}
+.chip.ok{background:rgba(0,168,132,.12);color:#0a7d63}
+.chip.off{background:rgba(219,184,74,.2);color:#7a5c05}
+.chip.sim{background:rgba(0,44,110,.1);color:var(--marca)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+.guiones{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}
+.guion{padding:7px 11px;border-radius:999px;border:1px solid var(--linea);background:var(--papel);
+  font-size:12px;font-weight:600;color:var(--marca);cursor:pointer;text-align:left;line-height:1.35}
+.guion:hover{background:#f2f6fc;border-color:#c9d6e6}
+
+/* ---------- teléfono ---------- */
+.fono{
+  background:#0f1417;border-radius:26px;padding:9px;
+  box-shadow:0 24px 60px -28px rgba(13,20,27,.55),0 2px 8px rgba(13,20,27,.16);
+  display:flex;flex-direction:column;overflow:hidden;
+  /* 190px = aviso + barra de marca + paddings + pie. Así la página NO scrollea
+     en 1440x900 y el teléfono se ve entero en la pantalla compartida. */
+  height:min(772px,calc(100dvh - 190px));min-height:520px;
+  max-width:520px;width:100%;margin:0 auto;
+}
+@media (max-width:1039px){ .fono{height:min(720px,calc(100dvh - 110px))} }
+.pantalla{flex:1;display:flex;flex-direction:column;background:var(--wa-fondo);
+  border-radius:19px;overflow:hidden;min-height:0}
+
+/* barra de estado del sistema */
+.status{background:var(--wa-header);color:#fff;display:flex;align-items:center;gap:8px;
+  padding:7px 16px 5px;font-size:12px;font-weight:600;letter-spacing:.01em}
+.status .sp{flex:1}
+.status svg{opacity:.92}
+
+/* cabecera del chat */
+.chat-hd{background:var(--wa-header);color:#fff;display:flex;align-items:center;gap:11px;padding:8px 12px 10px}
+.chat-hd .back{opacity:.9;flex:none}
+.chat-hd .av{width:39px;height:39px;border-radius:50%;background:#fff;flex:none;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;padding:3px}
+.chat-hd .av img{width:100%;height:100%;object-fit:contain}
+.chat-hd .quien{flex:1;min-width:0}
+.chat-hd .quien b{display:block;font-size:15.5px;font-weight:600;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-hd .quien small{display:block;font-size:12px;color:rgba(255,255,255,.78);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-hd .ico{display:flex;gap:16px;opacity:.92;flex:none;padding-right:2px}
+
+/* hilo */
+.hilo{
+  flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 8px 14px;min-height:0;
+  background-color:var(--wa-fondo);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%23dbd4ca' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' opacity='.7'%3E%3Cpath d='M16 24h14M23 17v14'/%3E%3Ccircle cx='108' cy='30' r='8'/%3E%3Cpath d='M34 70c7-9 16-9 23 0'/%3E%3Cpath d='M86 86l9 9 16-18'/%3E%3Cpath d='M20 108h18v11H29l-5 6v-6h-4z'/%3E%3Cpath d='M118 116h11M123.5 110.5v11'/%3E%3Cpath d='M62 118h16'/%3E%3Cpath d='M70 40v12'/%3E%3C/g%3E%3C/svg%3E");
+}
+.aviso-e2e{max-width:88%;margin:2px auto 12px;background:#fff5d6;color:#5b5341;border-radius:8px;
+  padding:7px 11px;font-size:11.5px;line-height:1.45;text-align:center}
+.dia{display:block;width:fit-content;margin:8px auto 12px;background:#ffffff;color:var(--wa-meta);
+  border-radius:8px;padding:5px 12px;font-size:11.5px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.03em;box-shadow:0 1px 1px rgba(11,20,26,.13)}
+
+.msg{max-width:82%;margin:0 6px 8px;padding:6px 9px 7px;border-radius:8px;position:relative;
+  box-shadow:0 1px 1px rgba(11,20,26,.13);font-size:14.3px;line-height:1.42;
+  color:var(--tinta);            /* regla 127: negro, siempre */
+  overflow-wrap:anywhere;animation:aparece .18s ease-out}
+@keyframes aparece{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.de-viel{background:var(--wa-in);margin-right:auto;border-top-left-radius:0}
+.msg.del-cliente{background:var(--wa-out);margin-left:auto;border-top-right-radius:0}
+.msg .txt{white-space:pre-wrap}
+/* Fotos del agente. Contrato: una línea cuyo contenido único sea una URL https de
+   imagen se pinta como foto dentro de la burbuja, como hace WhatsApp: imagen al
+   ancho de la burbuja, esquinas redondeadas y el texto debajo. Si la foto no
+   carga se oculta (regla 95) y el texto queda intacto.
+   Carga EAGER a propósito: `lazy` es para galerías largas fuera de pantalla, y
+   aquí la foto entra al viewport en el mismo instante en que se pinta el mensaje
+   — solo agregaba latencia y dejaba un hueco blanco un segundo. */
+.msg .foto{display:block;width:100%;height:auto;border-radius:6px;
+  margin:1px 0 5px;background:#e6e1d9;object-fit:cover;
+  /* `auto 4/3`: mientras la imagen no tiene proporción natural (o sea, mientras
+     carga) el hueco ya mide 4:3 — el alto final de las fotos de Viel (1000x748).
+     Apenas llega la imagen manda SU proporción real, así que una foto vertical o
+     panorámica se ve bien igual. Sin esto la burbuja crecía de golpe al cargar y
+     empujaba el texto: el "golpe de transición" que hay que evitar. */
+  aspect-ratio:auto 4 / 3}
+.msg .foto:last-of-type{margin-bottom:2px}
+.msg .foto+.foto{margin-top:3px}      /* varias fotos seguidas se apilan */
+.msg .foto+.txt{display:block;margin-top:2px}
+.msg.con-foto{max-width:min(82%,320px)}
+/* Enlaces dentro de la burbuja, como WhatsApp real: azul y subrayados. Los pinta
+   enlaza() por DOM (a.href por propiedad), no se concatenan en innerHTML.
+   overflow-wrap para que una URL larga no ensanche la burbuja. */
+.msg .txt a{color:#027eb5;text-decoration:underline;overflow-wrap:anywhere}
+.msg.del-cliente .txt a{color:#0a6b8a}
+.msg .pie{float:right;margin:6px 0 -2px 10px;display:inline-flex;align-items:center;gap:3px;
+  font-size:11px;color:var(--wa-meta);line-height:1;user-select:none}
+.msg .pie .ticks{color:var(--wa-tick)}
+.msg .pie .ticks.gris{color:#8696a0}
+.msg::after{content:"";display:block;clear:both}
+.msg .plantilla{display:block;margin-bottom:5px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:#0a7d63}
+
+/* colita de la burbuja */
+.msg.de-viel::before,.msg.del-cliente::before{content:"";position:absolute;top:0;width:9px;height:13px}
+.msg.de-viel::before{left:-8px;background:var(--wa-in);
+  clip-path:polygon(100% 0,0 0,100% 100%)}
+.msg.del-cliente::before{right:-8px;background:var(--wa-out);
+  clip-path:polygon(0 0,100% 0,0 100%)}
+
+.typing{display:flex;gap:4px;align-items:center;width:fit-content;margin:0 6px 8px;padding:11px 13px;
+  background:var(--wa-in);border-radius:8px;border-top-left-radius:0;box-shadow:0 1px 1px rgba(11,20,26,.13)}
+.typing i{width:7px;height:7px;border-radius:50%;background:#9aa6ab;animation:pulso 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.16s}.typing i:nth-child(3){animation-delay:.32s}
+@keyframes pulso{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+/* barra de escritura */
+.escribir{display:flex;align-items:flex-end;gap:7px;padding:7px 8px 9px;background:#f0f2f5}
+.caja-txt{flex:1;display:flex;align-items:flex-end;gap:8px;background:#fff;border-radius:20px;padding:8px 12px;min-width:0}
+.caja-txt svg{flex:none;color:#8696a0;margin-bottom:2px}
+.caja-txt textarea{flex:1;border:0;outline:0;resize:none;max-height:96px;font-size:14.5px;
+  line-height:1.4;background:transparent;color:var(--tinta);padding:0;min-width:0}
+.caja-txt textarea::placeholder{color:#8696a0}
+.enviar{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--wa-verde);
+  color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.enviar:hover{background:#029a79}
+.enviar:disabled{opacity:.5;cursor:progress}
+
+/* ---------- avisos ---------- */
+.alerta{display:flex;align-items:center;gap:9px;margin:0 auto 12px;max-width:1320px;
+  padding:10px 14px;border-radius:10px;background:#fff3d6;border:1px solid #f0d99a;
+  color:#6b5410;font-size:12.5px;font-weight:600}
+.alerta .dot{width:8px;height:8px;border-radius:50%;background:#c99a13;flex:none;animation:pulso 1.4s infinite}
+
+footer{border-top:1px solid var(--linea);background:var(--papel)}
+.foot{max-width:1320px;margin:0 auto;padding:14px 16px;display:flex;gap:8px 18px;flex-wrap:wrap;
+  align-items:center;font-size:11.5px;color:var(--gris-cl)}
+.foot a{color:var(--gris);text-decoration:none;font-weight:600}
+.foot a:hover{color:var(--marca);text-decoration:underline}
+.foot .sp{flex:1}
+</style>
+</head>
+<body>
+
+<div class="aviso">Demostración construida por <b>IJV Agency</b> para Viel Propiedades · conversación simulada, no es un canal real</div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="marca">
+      <img src="./assets/cropped-viel.cl-png-1-180x180.png" alt="Viel Propiedades" width="34" height="34">
+      <div>
+        <b>Simulador de WhatsApp</b>
+        <small>Viel Propiedades · demo</small>
+      </div>
+    </div>
+    <div class="top-sp"></div>
+    <a class="lnk solid" href="./panel" target="_blank" rel="noopener">Abrir el panel del motor &rarr;</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ controles de la demo ============ -->
+  <details class="ctrl" id="ctrl">
+    <summary>Controles de la demo</summary>
+    <div class="ctrl-body">
+
+      <div class="grp">
+        <h3>Conversación</h3>
+        <div class="fld">
+          <input type="text" id="in-sesion" class="mono" aria-label="Identificador de la conversación" readonly>
+          <button class="btn-s" id="btn-nueva" type="button">Nueva</button>
+        </div>
+        <p class="hint">El panel del motor lee esta misma conversación. &laquo;Nueva&raquo; empieza un hilo limpio.</p>
+      </div>
+
+      <div class="grp">
+        <h3>Contacto que escribe</h3>
+        <div class="fld">
+          <input type="tel" id="in-tel" value="+56961234567" aria-label="Teléfono del contacto">
+        </div>
+        <div class="fld">
+          <select id="in-perfil" aria-label="Perfil del contacto">
+            <option value="">Perfil: sin definir</option>
+            <option value="comprador">Comprador</option>
+            <option value="arrendatario">Arrendatario</option>
+            <option value="corredor_canje">Corredor (canje)</option>
+            <option value="administracion">Quiere administración (VielPM)</option>
+          </select>
+        </div>
+        <p class="hint">Llega desde un portal, no desde la web: es el canal real de Viel.</p>
+      </div>
+
+      <div class="grp">
+        <h3>Reloj de la demo</h3>
+        <div class="fld">
+          <select id="in-preset" aria-label="Momento simulado">
+            <option value="real">Hora real de Chile</option>
+            <option value="dom2240">Domingo 22:40 — fuera de horario</option>
+            <option value="sab1120">Sábado 11:20 — abierto</option>
+            <option value="habil1930">Día hábil 19:30 — fuera de horario</option>
+            <option value="habil1015">Día hábil 10:15 — abierto</option>
+            <option value="custom">Elegir fecha y hora…</option>
+          </select>
+        </div>
+        <div class="fld" id="fld-custom" hidden>
+          <input type="datetime-local" id="in-custom" aria-label="Fecha y hora simuladas">
+          <button class="btn-s pri" id="btn-custom" type="button">Aplicar</button>
+        </div>
+        <div class="dato"><span>Hora en pantalla</span><b id="v-reloj">—</b></div>
+        <div class="dato"><span>Horario</span><b id="v-horario">—</b></div>
+      </div>
+
+      <div class="grp">
+        <h3>Tiempo comprimido</h3>
+        <div class="fld">
+          <select id="in-factor" aria-label="Factor de compresión del tiempo">
+            <option value="240" selected>×240 — 6 h reales = 90 s</option>
+            <option value="480">×480 — 6 h reales = 45 s</option>
+            <option value="120">×120 — 6 h reales = 3 min</option>
+            <option value="1">Sin comprimir (tiempo real)</option>
+          </select>
+        </div>
+        <div class="dato"><span>Factor aplicado</span><b id="v-factor">×240</b></div>
+        <p class="hint">Los seguimientos se programan con el mismo criterio de siempre; en la demo el reloj corre más rápido y se dice en pantalla.</p>
+      </div>
+
+      <div class="grp">
+        <h3>Guiones sugeridos</h3>
+        <div class="guiones" id="guiones"></div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ============ teléfono ============ -->
+  <div>
+    <div class="alerta" id="alerta" hidden><span class="dot"></span><span id="alerta-txt"></span></div>
+
+    <div class="fono">
+      <div class="pantalla">
+
+        <div class="status">
+          <span id="st-hora">—</span>
+          <span class="sp"></span>
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1 5.2C3 3.1 5.4 2 8 2s5 1.1 7 3.2"/><path d="M3.6 7.7C4.9 6.4 6.4 5.7 8 5.7s3.1.7 4.4 2"/><path d="M6.3 10.2c.5-.5 1-.8 1.7-.8s1.2.3 1.7.8"/></svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><rect x=".7" y=".7" width="19" height="10.6" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".6"/><rect x="2.2" y="2.2" width="14.5" height="7.6" rx="1.5" fill="currentColor"/><path d="M21.4 4.2v3.6c1-.3 1.5-.8 1.5-1.8s-.5-1.5-1.5-1.8z" fill="currentColor" opacity=".6"/></svg>
+        </div>
+
+        <div class="chat-hd">
+          <svg class="back" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+          <span class="av"><img src="./assets/cropped-viel.cl-png-1-180x180.png" alt=""></span>
+          <div class="quien">
+            <b>Viel Propiedades</b>
+            <small id="hd-estado">en línea</small>
+          </div>
+          <div class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+            <svg width="5" height="19" viewBox="0 0 5 19" fill="currentColor" aria-hidden="true"><circle cx="2.5" cy="2.5" r="2.1"/><circle cx="2.5" cy="9.5" r="2.1"/><circle cx="2.5" cy="16.5" r="2.1"/></svg>
+          </div>
+        </div>
+
+        <div class="hilo" id="hilo" role="log" aria-live="polite" aria-label="Conversación de WhatsApp">
+          <div class="aviso-e2e">Los mensajes están cifrados de extremo a extremo. Nadie fuera de este chat puede leerlos.</div>
+          <span class="dia" id="dia">hoy</span>
+        </div>
+
+        <form class="escribir" id="form">
+          <div class="caja-txt">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M8.4 14.2c.9 1.2 2.1 1.8 3.6 1.8s2.7-.6 3.6-1.8" stroke-linecap="round"/><circle cx="9" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.1" fill="currentColor" stroke="none"/></svg>
+            <textarea id="in-msg" rows="1" placeholder="Escribe un mensaje" autocomplete="off" aria-label="Mensaje"></textarea>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1l-8.9 8.9a5.8 5.8 0 01-8.2-8.2l8.9-8.9a3.9 3.9 0 015.5 5.5l-8.9 8.9a1.9 1.9 0 01-2.8-2.8l8.2-8.2"/></svg>
+          </div>
+          <button class="enviar" id="btn-enviar" type="submit" aria-label="Enviar mensaje">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.3 21.3l19.4-8.7c.9-.4.9-1.7 0-2.1L2.3 1.8c-.8-.4-1.6.3-1.4 1.1L3 10.3c.1.4.4.6.8.7l8.5 1-8.5 1c-.4 0-.7.3-.8.7L.9 20.2c-.2.8.6 1.5 1.4 1.1z"/></svg>
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot">
+    <span>Simulación con fines de demostración. Los datos que se escriban aquí son de prueba.</span>
+    <span class="sp"></span>
+    <a href="./politica-privacidad">Política de privacidad</a>
+    <a href="https://ijvagency.com/" target="_blank" rel="noopener">Powered by IJV</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------------- backend ---------------- */
+  var BASE_DEF = 'https://meta.ijvagency.com/webhook';
+  var qs = new URLSearchParams(location.search);
+  // El override de API solo se acepta sirviendo en local (pruebas contra un stub).
+  // En producción la página siempre habla con el webhook real: nada de apuntar a
+  // un host arbitrario que venga por query string.
+  var esLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  var BASE = (esLocal && qs.get('api')) ? qs.get('api').replace(/\/$/,'') : BASE_DEF;
+  var EP_IN    = BASE + '/viel-demo-wa-in';
+  var EP_PANEL = BASE + '/viel-demo-panel';
+
+  var TZ = 'America/Santiago';
+  var K = { ses:'vdemo:sesion', tel:'vdemo:tel', off:'vdemo:offset', lbl:'vdemo:momento', fac:'vdemo:factor', pre:'vdemo:preset' };
+
+  /* ---------------- utilidades ---------------- */
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function guarda(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
+  function lee(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+  function nuevaSesion(){ return 'viel_demo_' + Math.random().toString(16).slice(2,10) + Date.now().toString(36).slice(-4); }
+
+  /* Fecha: acepta ISO, epoch ms, epoch s o "YYYY-MM-DD HH:MM". */
+  function aFecha(v){
+    if(v==null || v==='') return null;
+    if(v instanceof Date) return isNaN(v)?null:v;
+    if(typeof v==='number'){ var d0=new Date(v<1e11? v*1000 : v); return isNaN(d0)?null:d0; }
+    var s=String(v).trim();
+    if(/^\d+$/.test(s)) return aFecha(Number(s));
+    var d=new Date(s.replace(' ','T'));
+    return isNaN(d)?null:d;
+  }
+  function hora(v){
+    var d=aFecha(v)||new Date();
+    try{ return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(d); }
+    catch(e){ return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+  }
+  /* El motor manda la apertura como ISO crudo; en pantalla va legible. */
+  function diaChile(d){
+    try{ return new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d); }
+    catch(e){ return d.toISOString().slice(0,10); }
+  }
+  function fechaCorta(v){
+    var d=aFecha(v);
+    if(!d) return v==null?'':String(v);
+    var dif=Math.round((Date.parse(diaChile(d))-Date.parse(diaChile(simAhora())))/86400000);
+    if(dif===0) return 'hoy '+hora(d);
+    if(dif===1) return 'mañana '+hora(d);
+    try{
+      return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,weekday:'short',day:'numeric',month:'short'}).format(d)+' '+hora(d);
+    }catch(e){ return hora(d); }
+  }
+  function diaLargo(d){
+    try{ return new Intl.DateTimeFormat('es-CL',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(d); }
+    catch(e){ return d.toLocaleDateString(); }
+  }
+  /* Desfase real de Chile para ese instante (respeta el horario de verano). */
+  function offsetChile(d){
+    try{
+      var p=new Intl.DateTimeFormat('en-US',{timeZone:TZ,timeZoneName:'longOffset'}).formatToParts(d);
+      for(var i=0;i<p.length;i++) if(p[i].type==='timeZoneName'){
+        var m=/GMT([+-])(\d{2}):?(\d{2})?/.exec(p[i].value);
+        if(m) return (m[1]==='-'?-1:1)*(parseInt(m[2],10)*60+parseInt(m[3]||'0',10));
+      }
+    }catch(e){}
+    return -240; // Chile continental en invierno
+  }
+  /* ISO con el desfase de Chile, que es lo que el motor recibe como demo_now. */
+  function isoChile(d){
+    var off=offsetChile(d), loc=new Date(d.getTime()+off*60000), p=function(n){return ('0'+n).slice(-2);};
+    var sg=off<0?'-':'+', a=Math.abs(off);
+    return loc.getUTCFullYear()+'-'+p(loc.getUTCMonth()+1)+'-'+p(loc.getUTCDate())+'T'+
+           p(loc.getUTCHours())+':'+p(loc.getUTCMinutes())+':00'+sg+p(Math.floor(a/60))+':'+p(a%60);
+  }
+  /* Partes de la fecha en horario de Chile (para presets tipo "domingo 22:40"). */
+  function partesChile(d){
+    var f=new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',
+      hour:'2-digit',minute:'2-digit',weekday:'short',hour12:false}).formatToParts(d);
+    var o={}; f.forEach(function(x){ o[x.type]=x.value; });
+    var dias={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+    return { y:+o.year, m:+o.month, d:+o.day, hh:+(o.hour==='24'?'0':o.hour), mm:+o.minute, dow:dias[o.weekday] };
+  }
+  /* Instante UTC que en Chile se lee como (y,m,d,hh,mm). */
+  function desdeChile(y,m,d,hh,mm){
+    var t=Date.UTC(y,m-1,d,hh,mm,0);
+    var cand=new Date(t - offsetChile(new Date(t))*60000);
+    return new Date(t - offsetChile(cand)*60000); // segunda pasada: DST
+  }
+
+  /* ---------------- estado ---------------- */
+  var st = {
+    sesion: lee(K.ses) || nuevaSesion(),
+    offset: parseInt(lee(K.off)||'0',10) || 0,   // ms de desfase del reloj simulado
+    momento: lee(K.lbl) || '',                   // etiqueta del preset aplicado
+    factor: parseInt(lee(K.fac)||'240',10) || 240,
+    msgs: [],                                    // {id,dir,texto,ts,tipo,local}
+    enVuelo:false, esperando:false, horario:null, apertura:null,
+    timerPoll:null, timerReloj:null, errores:0
+  };
+  guarda(K.ses,st.sesion);
+
+  function simAhora(){ return new Date(Date.now() + st.offset); }
+  function simulado(){ return st.offset !== 0; }
+
+  /* ---------------- red ---------------- */
+  function post(url, body, ms){
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var to = setTimeout(function(){ if(ctl) ctl.abort(); }, ms||14000);
+    return fetch(url,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body), signal:ctl?ctl.signal:undefined, cache:'no-store'
+    }).then(function(r){
+      clearTimeout(to);
+      return r.text().then(function(t){
+        var j=null; try{ j=t?JSON.parse(t):null; }catch(e){}
+        if(!r.ok){ var err=new Error('HTTP '+r.status); err.status=r.status; err.cuerpo=j||t; throw err; }
+        return j||{};
+      });
+    }, function(e){ clearTimeout(to); throw e; });
+  }
+  function avisa(txt){
+    var a=$('alerta');
+    if(!txt){ a.hidden=true; return; }
+    $('alerta-txt').textContent=txt; a.hidden=false;
+  }
+
+  /* ---------------- render del hilo ---------------- */
+  var TICKS_LEIDO = '<svg class="ticks" width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Leído"><path d="M1 5.9l2.5 2.6L8.7 3"/><path d="M6.3 8.5L11.5 3"/><path d="M9.3 5.9l2.5 2.6L15 4.6" opacity="0"/></svg>';
+  var TICKS_ENVIADO = '<svg class="ticks gris" width="12" height="11" viewBox="0 0 12 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Enviado"><path d="M1 5.9l2.5 2.6L9.5 2.4"/></svg>';
+
+  function firma(){
+    return st.msgs.map(function(m){ return (m.id||'')+'|'+m.dir+'|'+(m.texto||'').length+'|'+(m.ts||''); }).join('~')
+      + (st.esperando?'#t':'');
+  }
+  var ultimaFirma='';
+
+  function abajo(){
+    var h=$('hilo'); h.scrollTop=h.scrollHeight;
+    if(typeof requestAnimationFrame==='function') requestAnimationFrame(function(){ h.scrollTop=h.scrollHeight; });
+  }
+
+  /* ---------------- fotos dentro de la burbuja ----------------
+     Contrato con el agente: manda la URL de una foto SOLA en su propia línea.
+     Esa línea sale del texto y se pinta como imagen; el resto fluye normal.
+     Cualquier otra URL (la ficha de la propiedad, por ejemplo) sigue siendo
+     texto. Se acepta SOLO https + extensión de imagen conocida: así una línea
+     rara nunca puede meter un `javascript:` ni un atributo inyectado, y encima
+     la URL pasa igual por esc(). Peor caso si algo falla: se ve la URL. */
+  var RE_FOTO = /^https:\/\/[^\s<>"']+\.(?:webp|jpe?g|png)(?:\?[^\s<>"']*)?$/i;
+  var RE_HAY_FOTO = /^[ \t]*https:\/\/[^\s<>"']+\.(?:webp|jpe?g|png)(?:\?[^\s<>"']*)?[ \t\r]*$/im;
+
+  function bloques(texto){
+    var out=[], buf=[];
+    function cierra(){
+      var t=buf.join('\n').replace(/^\n+/,'').replace(/\n+$/,'');
+      if(t.trim()) out.push({tipo:'txt', texto:t});
+      buf=[];
+    }
+    String(texto==null?'':texto).split('\n').forEach(function(l){
+      var s=l.trim();
+      if(RE_FOTO.test(s)){ cierra(); out.push({tipo:'foto', url:s}); }
+      else buf.push(l);
+    });
+    cierra();
+    return out;
+  }
+  /* alt descriptivo a partir del archivo: ".../dormitorio-1.webp" -> "Foto: dormitorio 1" */
+  function altFoto(url){
+    var n=url.split('?')[0].split('/').pop().replace(/\.[a-z]+$/i,'').replace(/[-_]+/g,' ').trim();
+    return n ? ('Foto: '+n) : 'Foto de la propiedad';
+  }
+  function cuerpo(texto){
+    if(!RE_HAY_FOTO.test(String(texto==null?'':texto)))
+      return '<span class="txt">'+esc(texto)+'</span>';   // camino de siempre
+    return bloques(texto).map(function(b){
+      return b.tipo==='foto'
+        ? '<img class="foto" src="'+esc(b.url)+'" alt="'+esc(altFoto(b.url))+'" loading="eager" fetchpriority="high" decoding="async">'
+        : '<span class="txt">'+esc(b.texto)+'</span>';
+    }).join('');
+  }
+  /* ---------------- enlaces clickeables ----------------
+     WhatsApp real convierte cualquier URL del mensaje en un enlace. Sin esto, el
+     agente dice "puedes verlo en el enlace que te envié" y el visitante ve texto
+     muerto: la mitad de la queja original de Nacho.
+
+     Se hace por DOM y NO concatenando en innerHTML: `a.href` se asigna por
+     PROPIEDAD y el texto va por `textContent`, así que ni la URL ni el texto se
+     reinterpretan como HTML. La regex exige `http(s)://` — nada de `javascript:`
+     ni `data:`. Las líneas-foto ya salieron del texto antes de llegar aquí
+     (bloques()), así que una foto nunca termina como enlace. */
+  var RE_URL = /https?:\/\/[^\s<>"']+/g;
+  var CIERRES = '.,;:!?)]}\u00bb"\'';
+
+  function enlaza(span){
+    var t = span.textContent;
+    if(t.indexOf('http') < 0) return;      // camino de siempre: el nodo ni se toca
+    RE_URL.lastIndex = 0;
+    var frag = document.createDocumentFragment();
+    var i = 0, m, hubo = false;
+    while((m = RE_URL.exec(t)) !== null){
+      var url = m[0], cola = '';
+      // La puntuación final es de la frase, no del link: "…?id=110600." o "(…)".
+      while(url.length && CIERRES.indexOf(url.charAt(url.length-1)) >= 0){
+        cola = url.charAt(url.length-1) + cola;
+        url = url.slice(0,-1);
+      }
+      if(!url) continue;
+      if(m.index > i) frag.appendChild(document.createTextNode(t.slice(i, m.index)));
+      var a = document.createElement('a');
+      a.href = url;                        // por PROPIEDAD, nunca dentro de innerHTML
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = url;                 // textContent: no se interpreta como HTML
+      frag.appendChild(a);
+      i = m.index + m[0].length - cola.length;
+      hubo = true;
+    }
+    if(!hubo) return;
+    if(i < t.length) frag.appendChild(document.createTextNode(t.slice(i)));
+    span.textContent = '';
+    span.appendChild(frag);
+  }
+
+  /* Regla 95: una foto que 404ea se oculta, jamás se ve el ícono roto.
+     El re-scroll al onload queda como red: con el 4/3 reservado el alto ya es el
+     final y no hace falta, pero si la foto real NO es 4:3 el alto cambia al
+     cargar — y ahí sí hay que volver a bajar (rAF adentro de abajo(), Safari). */
+  function preparaFoto(img){
+    /* `important` para que ninguna regla futura de .foto le gane al ocultado. */
+    var falla=function(){
+      if(img.style.setProperty) img.style.setProperty('display','none','important');
+      else img.style.display='none';
+    };
+    img.onerror=falla;
+    img.onload=abajo;
+    if(img.complete){ if(img.naturalWidth===0) falla(); else abajo(); }
+  }
+
+  function pinta(force){
+    var f=firma();
+    if(!force && f===ultimaFirma) return;
+    ultimaFirma=f;
+    var h=$('hilo');
+    var html = '<div class="aviso-e2e">Los mensajes están cifrados de extremo a extremo. Nadie fuera de este chat puede leerlos.</div>'
+             + '<span class="dia">'+esc(diaLargo(simAhora()))+'</span>';
+    st.msgs.forEach(function(m){
+      var mio = m.dir === 'in';                 // "in" = entrante para Viel = lo escribe el cliente
+      // Solo los seguimientos llevan etiqueta: una respuesta nocturna del agente
+      // no es una plantilla y marcarla como tal confunde al cliente.
+      var etiqueta = (m.tipo==='seguimiento' && !mio)
+        ? '<span class="plantilla">Seguimiento automático</span>' : '';
+      var cuerpoHtml = cuerpo(m.texto);
+      var conFoto = cuerpoHtml.indexOf('<img class="foto"') >= 0;
+      html += '<div class="msg '+(mio?'del-cliente':'de-viel')+(conFoto?' con-foto':'')+'">'
+            + etiqueta
+            + cuerpoHtml
+            + '<span class="pie">'+esc(hora(m.ts))+(mio?(m.local?TICKS_ENVIADO:TICKS_LEIDO):'')+'</span>'
+            + '</div>';
+    });
+    if(st.esperando) html += '<div class="typing" aria-label="escribiendo"><i></i><i></i><i></i></div>';
+    h.innerHTML = html;
+    var fotos = h.querySelectorAll('img.foto');
+    for(var i=0;i<fotos.length;i++) preparaFoto(fotos[i]);
+    var textos = h.querySelectorAll('.msg .txt');
+    for(var j=0;j<textos.length;j++) enlaza(textos[j]);
+    abajo();
+  }
+
+  function normaliza(arr){
+    if(!Array.isArray(arr)) return null;
+    return arr.map(function(m,i){
+      return {
+        id: String(m.id!=null?m.id:('s'+i)),
+        dir: (m.dir==='in'||m.dir==='out') ? m.dir : (m.dir==='cliente'?'in':'out'),
+        texto: m.texto!=null?m.texto:(m.text||m.mensaje||''),
+        ts: m.ts, tipo: m.tipo||'chat', local:false
+      };
+    });
+  }
+
+  /* ---------------- envío ---------------- */
+  function enviar(texto){
+    texto = String(texto||'').trim();
+    if(!texto || st.enVuelo) return;
+    st.enVuelo = true; $('btn-enviar').disabled = true;
+    st.msgs.push({ id:'local-'+Date.now(), dir:'in', texto:texto, ts:simAhora().toISOString(), tipo:'chat', local:true });
+    st.esperando = true; $('hd-estado').textContent = 'escribiendo…';
+    pinta(true);
+
+    var cuerpo = {
+      session_id: st.sesion,
+      texto: texto,
+      from: $('in-tel').value.trim() || '+56961234567',
+      factor_demo: st.factor
+    };
+    var perfil = $('in-perfil').value; if(perfil) cuerpo.perfil = perfil;
+    if(simulado()) cuerpo.demo_now = isoChile(simAhora());
+
+    post(EP_IN, cuerpo).then(function(r){
+      st.errores = 0; avisa('');
+      if(r && typeof r.factor_demo!=='undefined' && r.factor_demo){
+        st.factor = Number(r.factor_demo) || st.factor; guarda(K.fac, st.factor); pintaFactor();
+      }
+      if(r && typeof r.fuera_horario!=='undefined'){
+        st.horario = !r.fuera_horario; st.apertura = r.apertura_siguiente || null; pintaHorario();
+      }
+      if(r && r.reply){
+        st.msgs.push({ id:'r-'+Date.now(), dir:'out', texto:r.reply,
+                       ts:r.ts||simAhora().toISOString(), tipo:r.fuera_horario?'fuera_horario':'chat', local:false });
+      }
+    }).catch(function(e){
+      avisa(mensajeError(e));
+    }).then(function(){
+      st.enVuelo=false; st.esperando=false;
+      $('btn-enviar').disabled=false; $('hd-estado').textContent='en línea';
+      pinta(true);
+      sondea();   // el motor ya tiene la cola armada: refrescamos de inmediato
+    });
+  }
+
+  function mensajeError(e){
+    if(e && e.status===404) return 'El motor de la demo todavía no responde en este servidor (webhook no publicado).';
+    if(e && e.name==='AbortError') return 'El motor está tardando más de lo normal. Reintentando…';
+    return 'Sin conexión con el motor de la demo. Reintentando…';
+  }
+
+  /* ---------------- sondeo del panel (trae los seguimientos) ---------------- */
+  var sondeando=false;
+  function sondea(){
+    if(sondeando) return;
+    sondeando=true;
+    var cuerpo={ session_id: st.sesion };
+    if(simulado()) cuerpo.demo_now = isoChile(simAhora());
+    post(EP_PANEL, cuerpo, 9000).then(function(r){
+      st.errores=0; avisa('');
+      if(r && r.horario){ st.horario = !!r.horario.abierto; st.apertura = r.horario.apertura_siguiente||st.apertura; pintaHorario(); }
+      if(r && typeof r.factor_demo!=='undefined' && r.factor_demo){
+        st.factor=Number(r.factor_demo)||st.factor; guarda(K.fac,st.factor); pintaFactor();
+      }
+      var srv = normaliza(r && r.mensajes);
+      if(srv){
+        // El servidor manda; solo se conservan los locales que aún no llegaron.
+        var textos = {}; srv.forEach(function(m){ textos[(m.dir+'|'+String(m.texto).trim())]=1; });
+        var pend = st.msgs.filter(function(m){ return m.local && !textos[(m.dir+'|'+String(m.texto).trim())]; });
+        st.msgs = srv.concat(pend);
+        pinta(false);
+      }
+    }).catch(function(e){
+      st.errores++;
+      if(st.errores>=2) avisa(mensajeError(e));
+    }).then(function(){ sondeando=false; });
+  }
+
+  /* ---------------- pintado de los indicadores ---------------- */
+  function pintaFactor(){
+    $('v-factor').textContent = st.factor>1 ? ('×'+st.factor+' — 6 h = '+humano(21600/st.factor)) : 'sin comprimir';
+    var sel=$('in-factor');
+    if(sel.value!==String(st.factor)){
+      var hay=false; for(var i=0;i<sel.options.length;i++) if(sel.options[i].value===String(st.factor)) hay=true;
+      if(hay) sel.value=String(st.factor);
+    }
+  }
+  function humano(s){
+    s=Math.max(0,s);
+    // Hasta 3 min se dice en segundos: en la demo la cifra que importa es "90 s",
+    // no "2 min" — es lo que el cliente va a cronometrar en pantalla.
+    if(s<180) return Math.round(s)+' s';
+    if(s<3600){ var m=s/60; return (Math.abs(m%1)>0.05?m.toFixed(1):m.toFixed(0)).replace('.',',')+' min'; }
+    var h=s/3600; return (Math.abs(h%1)>0.05?h.toFixed(1):h.toFixed(0)).replace('.',',')+' h';
+  }
+  function pintaHorario(){
+    var el=$('v-horario');
+    if(st.horario===null){ el.textContent='—'; return; }
+    el.innerHTML = st.horario
+      ? '<span class="chip ok"><span class="dot"></span>abierto</span>'
+      : '<span class="chip off"><span class="dot"></span>cerrado'+(st.apertura?' · abre '+esc(fechaCorta(st.apertura)):'')+'</span>';
+  }
+  function pintaReloj(){
+    var d=simAhora();
+    $('st-hora').textContent = hora(d);
+    $('v-reloj').innerHTML = esc(hora(d)+' · '+diaLargo(d)) +
+      (simulado()? ' <span class="chip sim">simulado</span>' : ' <span class="chip">real</span>');
+    var dia=document.querySelector('#hilo .dia'); if(dia) dia.textContent=diaLargo(d);
+  }
+
+  /* ---------------- presets del reloj ---------------- */
+  function aplicaPreset(v){
+    var ahora=new Date(), p=partesChile(ahora), destino=null, etiqueta='';
+    function retro(dow,hh,mm){
+      // Último día de la semana pedido (hoy incluido) en hora de Chile.
+      var diff=(p.dow-dow+7)%7;
+      var base=new Date(ahora.getTime()-diff*86400000), q=partesChile(base);
+      return desdeChile(q.y,q.m,q.d,hh,mm);
+    }
+    // Día hábil = HOY si hoy es hábil; si no, el viernes anterior. Mantiene la demo
+    // pegada a la fecha real (un "miércoles pasado" se nota y resta credibilidad).
+    function habil(hh,mm){
+      var d=p.dow, atras = (d===0)?2 : (d===6)?1 : 0;
+      var base=new Date(ahora.getTime()-atras*86400000), q=partesChile(base);
+      return desdeChile(q.y,q.m,q.d,hh,mm);
+    }
+    if(v==='real'){ st.offset=0; st.momento=''; }
+    else if(v==='dom2240'){ destino=retro(0,22,40); etiqueta='domingo 22:40'; }
+    else if(v==='sab1120'){ destino=retro(6,11,20); etiqueta='sábado 11:20'; }
+    else if(v==='habil1930'){ destino=habil(19,30); etiqueta='día hábil 19:30'; }
+    else if(v==='habil1015'){ destino=habil(10,15); etiqueta='día hábil 10:15'; }
+    if(destino){ st.offset = destino.getTime()-Date.now(); st.momento=etiqueta; }
+    guarda(K.off,st.offset); guarda(K.lbl,st.momento); guarda(K.pre,v);
+    pintaReloj(); pinta(true);
+  }
+
+  /* ---------------- guiones ---------------- */
+  var GUIONES = [
+    'Hola, vi la casa publicada en Portal Inmobiliario. ¿Sigue disponible?',
+    '¿Cuántos baños tiene y hay colegios cerca?',
+    'Me interesa arrendar en Viña. ¿Qué tienen disponible?',
+    'Hola, hago canje con ustedes.',
+    'Quiero dar mi departamento en administración.',
+    '¿Se puede visitar el fin de semana?'
+  ];
+
+  /* ---------------- arranque ---------------- */
+  function init(){
+    $('in-sesion').value = st.sesion;
+    var tel = lee(K.tel); if(tel) $('in-tel').value = tel;
+    // El reloj simulado sobrevive al refresh (localStorage): el selector tiene que
+    // mostrar lo mismo que el reloj, o el presentador cree que está en hora real.
+    var pre = lee(K.pre);
+    if(pre && st.offset){
+      for(var q=0;q<$('in-preset').options.length;q++){
+        if($('in-preset').options[q].value===pre){ $('in-preset').value=pre; break; }
+      }
+      if(pre==='custom') $('fld-custom').hidden=false;
+    } else if(!st.offset){ $('in-preset').value='real'; }
+    else { $('in-preset').value='custom'; $('fld-custom').hidden=false; }
+    // El panel queda abierto en escritorio y plegable en móvil, aunque la ventana
+    // cambie de tamaño después de cargar.
+    if(window.matchMedia){
+      var mq=window.matchMedia('(min-width:1040px)');
+      var sincro=function(){ if(mq.matches) $('ctrl').open=true; };
+      sincro();
+      if(mq.addEventListener) mq.addEventListener('change',sincro);
+      else if(mq.addListener) mq.addListener(sincro);
+    } else { $('ctrl').open=true; }
+
+    GUIONES.forEach(function(g){
+      var b=document.createElement('button');
+      b.type='button'; b.className='guion'; b.textContent=g;
+      b.addEventListener('click', function(){ $('in-msg').value=g; $('in-msg').focus(); ajusta(); });
+      $('guiones').appendChild(b);
+    });
+
+    $('form').addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var t=$('in-msg').value;
+      $('in-msg').value=''; ajusta();
+      enviar(t);
+    });
+    $('in-msg').addEventListener('input', ajusta);
+    $('in-msg').addEventListener('keydown', function(ev){
+      if(ev.key==='Enter' && !ev.shiftKey){ ev.preventDefault(); $('form').requestSubmit(); }
+    });
+    $('in-tel').addEventListener('change', function(){ guarda(K.tel,$('in-tel').value.trim()); });
+
+    $('btn-nueva').addEventListener('click', function(){
+      st.sesion = nuevaSesion(); guarda(K.ses, st.sesion);
+      st.msgs=[]; st.horario=null; st.apertura=null;
+      $('in-sesion').value = st.sesion;
+      pinta(true); pintaHorario(); sondea();
+    });
+
+    $('in-preset').addEventListener('change', function(){
+      var v=$('in-preset').value;
+      $('fld-custom').hidden = (v!=='custom');
+      if(v!=='custom') aplicaPreset(v);
+    });
+    $('btn-custom').addEventListener('click', function(){
+      var v=$('in-custom').value; if(!v) return;
+      var m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v); if(!m) return;
+      var d=desdeChile(+m[1],+m[2],+m[3],+m[4],+m[5]);
+      st.offset=d.getTime()-Date.now(); st.momento='personalizado';
+      guarda(K.off,st.offset); guarda(K.lbl,st.momento); guarda(K.pre,'custom');
+      pintaReloj(); pinta(true);
+    });
+    $('in-factor').addEventListener('change', function(){
+      st.factor = parseInt($('in-factor').value,10)||1; guarda(K.fac,st.factor); pintaFactor();
+    });
+
+    // Otra pestaña (el panel) cambió la sesión o el reloj: nos alineamos.
+    window.addEventListener('storage', function(ev){
+      if(ev.key===K.ses && ev.newValue && ev.newValue!==st.sesion){
+        st.sesion=ev.newValue; $('in-sesion').value=st.sesion; st.msgs=[]; pinta(true); sondea();
+      }
+      if(ev.key===K.fac && ev.newValue){ st.factor=parseInt(ev.newValue,10)||st.factor; pintaFactor(); }
+    });
+
+    pintaFactor(); pintaReloj(); pintaHorario(); pinta(true);
+
+    st.timerReloj = setInterval(pintaReloj, 1000);
+    // Se sondea siempre: si la ventana queda detrás de otra el navegador la marca
+    // oculta, y en una demo con dos ventanas lado a lado el seguimiento TIENE que
+    // llegar igual. Oculta, baja el ritmo a ~9 s en vez de apagarse.
+    var pulso=0;
+    st.timerPoll  = setInterval(function(){ pulso++; if(!document.hidden || pulso%3===0) sondea(); }, 3000);
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) sondea(); });
+    // Un solo intervalo de cada cosa y ambos se cierran al salir: sin fugas.
+    window.addEventListener('pagehide', function(){
+      clearInterval(st.timerReloj); clearInterval(st.timerPoll);
+      st.timerReloj=null; st.timerPoll=null;
+    });
+    sondea();
+  }
+  function ajusta(){
+    var t=$('in-msg'); t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,96)+'px';
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+</body>
+</html>
